@@ -11,13 +11,12 @@ export const useHomeTabsStore = defineStore('homeTabs', () => {
     const router = useRouter()
 
     //定义tab内容结构
-
-    const activeTab = ref(0)
-    let tabIndex = 0;//获取最大tabindex数
+    const activeTab = ref("0")
+    // const tabIndex = ref(0);//获取最大tabindex数
 
     const tabsData = ref<TabType[]>([])
 
-    const removeTab = (targetName: number) => {
+    const removeTab = (targetName: string) => {
         const tabs = tabsData.value
         let activeName = activeTab.value
         if (activeName === targetName) {
@@ -33,28 +32,28 @@ export const useHomeTabsStore = defineStore('homeTabs', () => {
         }
 
         activeTab.value = activeName
-        tabsData.value = tabs.filter((tab) => tab.name !== new Number(targetName).valueOf())
+        tabsData.value = tabs.filter((tab) => tab.name !== targetName)
 
     }
-    const addTab = (menuEntity: any) => {
+    const addTab = (menu: any) => {
 
         const tabs = tabsData.value
-        const tab = tabs.find((tab) => tab.path == menuEntity.path)
+        const tab = tabs.find((tab) => tab.name == menu.index)
         if (tab == undefined) {
 
-            const netTabname = tabIndex++
-            activeTab.value = netTabname
+            //const netTabname = tabIndex.value++
+            activeTab.value = menu.index
             tabsData.value.push({
-                menuIndex: menuEntity.index,
-                title: menuEntity.title,
-                name: netTabname,
-                content: menuEntity.content,
-                icon: menuEntity.icon,
-                path: menuEntity.path,
-                isCloseable: menuEntity.isCloseable
+                //menuIndex: menu.index,
+                title: menu.title,
+                name: menu.index,
+                //content: menu.content,
+                icon: menu.icon,
+                path: menu.path,
+                //isCloseable: menu.isCloseable
             });
 
-            router.push(menuEntity.path)
+            router.push(menu.path)
 
         } else {
             router.push(tab.path)
@@ -62,5 +61,19 @@ export const useHomeTabsStore = defineStore('homeTabs', () => {
         }
     }
 
-    return { tabsData, activeTab, removeTab, addTab }
+    const clear = function () {
+
+        activeTab.value = "0"
+        // tabIndex.value = 0
+        tabsData.value = []
+        sessionStorage.removeItem("homeTabs")
+
+    }
+
+    return { tabsData, activeTab, removeTab, addTab, clear }
+}, {
+    //持久化
+    persist: {
+        storage: localStorage
+    }
 })

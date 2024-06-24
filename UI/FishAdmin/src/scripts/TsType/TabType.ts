@@ -1,7 +1,7 @@
 type TabType = {
     menuIndex: string,
     title: string,
-    name: number,
+    name: string,
     icon: string,
     content: string,
     path: string,

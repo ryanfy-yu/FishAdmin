@@ -72,7 +72,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("allcors", o =>
     {
-        o.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
 
     });
 
@@ -101,6 +101,8 @@ if (app.Environment.IsDevelopment())
 
 app.useSwaggerExt();
 
+app.UseCors("allcors");
+
 app.UseHttpsRedirection();
 
 //∆Ù”√»œ÷§
@@ -110,5 +112,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors("allcors");
 app.Run();

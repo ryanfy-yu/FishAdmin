@@ -9,14 +9,12 @@ const axioxExt = axios.create({
 })
 
 //request拦截
-axios.interceptors.request.use(function (config) {
+axioxExt.interceptors.request.use(function (config) {
 
   const userinfo = useUserInfoStore()
-
   //添加token
   if (userinfo.accessToken) {
     config.headers.Authorization = "Bearer " + userinfo.accessToken
-
   }
 
   return config;
@@ -26,10 +24,13 @@ axios.interceptors.request.use(function (config) {
 });
 
 //response拦截
-axios.interceptors.response.use(function (response) {
+axioxExt.interceptors.response.use(function (response) {
+
 
   return response;
 }, function (error) {
+
+
 
   return Promise.reject(error);
 });

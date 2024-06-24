@@ -13,7 +13,9 @@ namespace FishManagementSystem.JWT
     public class JwtToken
     {
 
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _Configuration;
+
+        private readonly JwtSecurityTokenHandler _JwtSecurityTokenHandler;
 
         /// <summary>
         /// 构造函数
@@ -21,7 +23,9 @@ namespace FishManagementSystem.JWT
         /// <param name="configuration"></param>
         public JwtToken(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _Configuration = configuration;
+
+            _JwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 
 
         }
@@ -36,7 +40,7 @@ namespace FishManagementSystem.JWT
         public string CreateToken(TokenType tokenType, string username)
         {
 
-            var jwtConfig = _configuration.GetSection("JwtConfig");
+            var jwtConfig = _Configuration.GetSection("JwtConfig");
             string _secretKey = jwtConfig.GetValue<string>("SecretKey") ?? string.Empty;
             string _issuer = jwtConfig.GetValue<string>("Issuer") ?? string.Empty;
             string _audience = jwtConfig.GetValue<string>("Audience") ?? string.Empty;
@@ -89,20 +93,43 @@ namespace FishManagementSystem.JWT
             );
 
             // 6. 将token变为string
-            var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            var token = _JwtSecurityTokenHandler.WriteToken(jwtSecurityToken);
 
             return token;
         }
 
 
-
-        public bool DecodeToken(string token)
+        /// <summary>
+        /// ;验证并返回user
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="overMinutes"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public bool ValidateToken(string token, int overMinutes, ref string user)
         {
+            var jwtConfig = _Configuration.GetSection("JwtConfig");
+            string _secretKey = jwtConfig.GetValue<string>("SecretKey") ?? string.Empty;
+            string _issuer = jwtConfig.GetValue<string>("Issuer") ?? string.Empty;
+            string _audience = jwtConfig.GetValue<string>("Audience") ?? string.Empty;
 
-            var f = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+            JwtSecurityToken securityToken = _JwtSecurityTokenHandler.ReadJwtToken(token);
+
+            TimeSpan ts = securityToken.ValidFrom - DateTime.Now;
+            int TimeConsuming = Convert.ToInt32(ts.TotalMinutes);
+
+            if (TimeConsuming > overMinutes) return false;
+
+            if (securityToken.Issuer == _issuer) return false;
+
+            if (!securityToken.Audiences.Any(o => o == _audience)) return false;
+
+
+            user = securityToken.Claims.FirstOrDefault(o => o.Type == "user").Value ?? string.Empty;
+
 
             return true;
-
 
 
         }

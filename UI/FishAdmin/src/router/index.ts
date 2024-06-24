@@ -1,8 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import IndexView from '@/views/IndexView.vue'
-import LoginView from '@/views/LoginView.vue'
-import DataTable from '@/components/DataTable/DataTable.vue'
-import HomeView from '@/views/HomeView.vue'
 
 
 const router = createRouter({
@@ -11,27 +7,27 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: ()=>import("@/views/LoginView.vue")
     },
     {
       path: '/index',
-      component: IndexView,
+      component: ()=>import("@/views/IndexView.vue"),
       children: [
         {
-          path: '/index/datalist',
+          path: '/datalist',
           props: true,
-          component: () => import('@/components/DataTable/DataTable.vue')
+          component: () => import('@/views/DataTable/DataTable.vue')
         },
         {
-          path: '/index/datalist/usermanage',
-          component: () => import('@/components/DataTable/DataTable.vue')
+          path: '/datalist/usermanage',
+          component: () => import('@/views/DataTable/DataTable.vue')
         },
         {
-          path: '/index/datalist/menumanage',
-          component: () => import('@/components/DataTable/DataTable.vue')
+          path: '/datalist/menumanage',
+          component: () => import('@/views/DataTable/DataTable.vue')
         },
         {
-          path: '/index/home',
+          path: '/home',
           component: () => import('@/views/HomeView.vue')
         },
         {

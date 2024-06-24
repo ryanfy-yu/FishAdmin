@@ -104,18 +104,18 @@ watch(() => route.path, (newId, oldId) => {
   // })
 
   // 向给定ID的用户发起请求
-  httpRequest.get('http://192.168.211.137:9080/api/User', {})
-    .then(function (response) {
-      // 处理成功情况
-      console.log(response);
-    })
-    .catch(function (error) {
-      // 处理错误情况
-      console.log(error);
-    })
-    .finally(function () {
-      // 总是会执行
-    });
+//   httpRequest.get('http://192.168.211.137:9080/api/User', {})
+//     .then(function (response) {
+//       // 处理成功情况
+//       console.log(response);
+//     })
+//     .catch(function (error) {
+//       // 处理错误情况
+//       console.log(error);
+//     })
+//     .finally(function () {
+//       // 总是会执行
+//     });
 
 
 

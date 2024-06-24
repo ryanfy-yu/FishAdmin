@@ -9,7 +9,6 @@ import { useHomeMenusStore } from '@/stores/homeMenus'
 
 const homeMenusStore = useHomeMenusStore()
 
-
 </script>
 
 <style scoped>

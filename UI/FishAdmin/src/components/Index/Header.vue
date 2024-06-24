@@ -49,20 +49,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useDark } from "@vueuse/core"
 import { useUserInfoStore } from '@/stores/userInfo';
-import { createPinia } from 'pinia';
-
-
+import { useHomeMenusStore } from '@/stores/homeMenus';
+import { useHomeTabsStore } from '@/stores/homeTabs';
 
 const logoutDialogVisible = ref(false)
 const userInfoStore = useUserInfoStore()
+const homeMenusStore = useHomeMenusStore()
+const hometabsStore = useHomeTabsStore()
 
 const logout = () => {
   // var pinia =createPinia()
   // userInfoStore.$reset()
   userInfoStore.clear()
+  homeMenusStore.clear()
+  hometabsStore.clear()
+
 
   location.reload();
 

@@ -66,12 +66,18 @@ const submitToLogin = () => {
                     type: 'success',
                 })
 
-                router.push("/index")
+                //2秒跳转
+                setInterval(() => {
 
-            } else {
-                //ShowError(response.data.message)
-                ElMessage.error(response.data.message)
+                    router.push("/index")
+
+                }, 2000)
+
+
             }
+            // else {
+            //     ElMessage.error(response.data.message)
+            // }
         })
         .catch(function (error) {
             // 处理错误情况

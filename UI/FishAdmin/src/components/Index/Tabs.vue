@@ -4,8 +4,21 @@
       <el-tabs @tab-remove="homeTabsStore.removeTab" @tab-change="tabChange" type="border-card" class="demo-tabs"
         v-model="homeTabsStore.activeTab">
 
+        <!-- 首页配置 -->
+        <!-- <el-tab-pane>
+          <template #label label="title" name="0">
+            <span class="custom-tabs-label">
+              <el-icon>
+                <HomeFilled />
+              </el-icon>
+              <span>首页</span>
+            </span>
+          </template>
+</el-tab-pane> -->
+
+        <!-- 菜单页配置 -->
         <template v-for="item in homeTabsStore.tabsData">
-          <el-tab-pane :closable="item.isCloseable" :label="item.title" :name="item.name">
+          <el-tab-pane closable :label="item.title" :name="item.name">
             <template #label v-if="item.icon != ''">
               <span class="custom-tabs-label">
                 <el-icon>
@@ -25,6 +38,11 @@
         </el-scrollbar>
       </el-tabs>
       <div style='position: absolute;right:10px;top:5px;'>
+        <el-button @click="closeAllTabs">
+          <el-icon>
+            <CloseBold />
+          </el-icon>
+        </el-button>
         <el-button @click="useFullScreen">
           <el-icon>
             <FullScreen />
@@ -40,7 +58,7 @@
 import { ref } from 'vue'
 import { useHomeTabsStore } from "@/stores/homeTabs"
 import { useHomeMenusStore } from "@/stores/homeMenus"
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const homeTabsStore = useHomeTabsStore()
 const homeMenusStore = useHomeMenusStore()
@@ -59,8 +77,24 @@ const tabChange = (name: number) => {
   if (activeTab) {
     router.push(activeTab.path)
     homeMenusStore.defaultActive = activeTab.menuIndex
+  } else {
+    router.push("/home")
+    homeMenusStore.defaultActive = "0"
+
+
   }
 }
+
+const closeAllTabs = () => {
+
+  homeTabsStore.activeTab = "0"
+  router.push("home")
+  var tabs = homeTabsStore.tabsData
+
+  homeTabsStore.tabsData = tabs.filter((tab) => tab.name == homeTabsStore.activeTab)
+
+}
+
 
 </script>
 
@@ -73,7 +107,7 @@ const tabChange = (name: number) => {
 
 .el-tabs__header {
 
-  padding-right: 70px;
+  padding-right: 150px;
 }
 
 .el-tab-pane {
