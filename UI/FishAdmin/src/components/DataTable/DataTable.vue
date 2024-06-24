@@ -51,7 +51,7 @@
 <style scoped></style>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DataSearch from '@/components/DataTable/DataSearch.vue'
 import TableButtons from '@/components/DataTable/TableButtons.vue'
@@ -64,7 +64,10 @@ import {
   Share,
   Search
 } from '@element-plus/icons-vue'
-import axios from 'axios'
+
+import httpRequest from '@/scripts/httpRequest'
+
+
 
 const route = useRoute()
 
@@ -82,11 +85,26 @@ const handleClick = (aa: any) => {
 
 
 watch(() => route.path, (newId, oldId) => {
-  alert(route.path);
+  //alert(route.path);
 
+
+  //   // 向给定ID的用户发起请求
+  //   axios.get('http://192.168.211.137:9080/api/User')
+  //     .then(function (response) {
+  //       // 处理成功情况
+  //       console.log(response);
+  //     })
+  //     .catch(function (error) {
+  //       // 处理错误情况
+  //       console.log(error);
+  //     })
+  //     .finally(function () {
+  //       // 总是会执行
+  //     });
+  // })
 
   // 向给定ID的用户发起请求
-  axios.get('http://192.168.211.137:9080/api/User')
+  httpRequest.get('http://192.168.211.137:9080/api/User', {})
     .then(function (response) {
       // 处理成功情况
       console.log(response);
@@ -98,8 +116,10 @@ watch(() => route.path, (newId, oldId) => {
     .finally(function () {
       // 总是会执行
     });
-})
 
+
+
+})
 
 
 

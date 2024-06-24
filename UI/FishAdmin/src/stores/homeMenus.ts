@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useHomeTabsStore } from "@/stores/homeTabs"
-import { useRoute,useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 
 // 你可以任意命名 `defineStore()` 的返回值，但最好使用 store 的名字，同时以 `use` 开头且以 `Store` 结尾。
@@ -16,25 +16,25 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
             index: "/",
             title: '首页',
             icon: 'HomeFilled',
-            path: '/home',
+            path: '/index/home',
         },
         {
             index: "/system_manage",
             title: '系统管理',
             icon: 'Setting',
-            path: '/system_manage',
+            path: '/index/system_manage',
             children: [
                 {
                     index: '/case_mafnage',
                     title: '用户管理',
                     icon: 'Document',
-                    path: '/datalist/usermanage',
+                    path: '/index/datalist/usermanage',
                 },
                 {
                     index: '/person_involfved',
                     title: '菜单管理',
                     icon: 'Document',
-                    path: '/datalist/menumanage',
+                    path: '/index/datalist/menumanage',
                 }
             ]
         },
@@ -47,13 +47,13 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
                     index: '5',
                     title: '物件管理',
                     icon: 'Document',
-                    path: '/caaaaase_manage',
+                    path: '/index/caaaaase_manage',
                 },
                 {
                     index: '6',
                     title: '物件研判',
                     icon: 'Document',
-                    path: '/datalist',
+                    path: '/index/datalist',
                 }
             ]
         },
@@ -71,19 +71,25 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
     //激活首页
     const setDefaultActive = function () {
 
-        let menu = menuList.value.find(o => o.index == "/home") || menuList.value[0]
+        router.isReady().then(() => {
 
-        homeTabsStore.addTab({
-            index: menu.index,
-            title: menu.title,
-            icon: menu.icon,
-            path: menu.path,
-            isCloseable: false
-        })
+            let menu = menuList.value.find(o => o.index == "/home") || menuList.value[0]
 
-        defaultActive.value = menu.index
-        router.push(menu.path||"/home")
-    }()
+            homeTabsStore.addTab({
+                index: menu.index,
+                title: menu.title,
+                icon: menu.icon,
+                path: menu.path,
+                isCloseable: false
+            })
+
+            defaultActive.value = menu.index
+            router.push(menu.path || "/index/home")
+        }
+        )
+    }
+
+
 
 
     const clickMenuItem = function (menuItem: any) {
@@ -103,5 +109,5 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
 
 
 
-    return { menuList, defaultActive, clickMenuItem }
+    return { menuList, defaultActive, clickMenuItem, setDefaultActive }
 })

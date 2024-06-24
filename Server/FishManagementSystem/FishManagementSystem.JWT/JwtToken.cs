@@ -12,37 +12,60 @@ namespace FishManagementSystem.JWT
 {
     public class JwtToken
     {
-        // private readonly IConfiguration _configuration;
 
+        private readonly IConfiguration _configuration;
 
-        private readonly string _secretKey;
-        private readonly string _issuer;
-        private readonly string _audience;
-        private readonly int _expired;
-
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="configuration"></param>
         public JwtToken(IConfiguration configuration)
         {
-            //_configuration = configuration;
+            _configuration = configuration;
 
-            var jwtConfig = configuration.GetSection("JwtConfig");
-            _secretKey = jwtConfig.GetValue<string>("SecretKey");
-            _issuer = jwtConfig.GetValue<string>("Issuer");
-            _audience = jwtConfig.GetValue<string>("Audience");
-            _expired = jwtConfig.GetValue<int>("Expired");
+
         }
 
-        public string CreateToken(string username, string[] rolename)
+        /// <summary>
+        /// GetToken
+        /// </summary>
+        /// <param name="tokenType"></param>
+        /// <param name="username"></param>
+        /// <param name="_expired"></param>
+        /// <returns></returns>
+        public string CreateToken(TokenType tokenType, string username)
         {
-            // 1. 定义需要使用到的Claims
 
+            var jwtConfig = _configuration.GetSection("JwtConfig");
+            string _secretKey = jwtConfig.GetValue<string>("SecretKey") ?? string.Empty;
+            string _issuer = jwtConfig.GetValue<string>("Issuer") ?? string.Empty;
+            string _audience = jwtConfig.GetValue<string>("Audience") ?? string.Empty;
+
+            int _expired = 0;
+
+            if (TokenType.Access == tokenType)
+            {
+                _expired = jwtConfig.GetValue<int>("Access_Expired");
+
+            }
+            else
+            {
+                _expired = jwtConfig.GetValue<int>("Refresh_Expired");
+
+            }
+
+
+            // 1. 定义需要使用到的Claims
             var claims = new[]
             {
-      new Claim(JwtRegisteredClaimNames.Iss,_issuer),
+                new Claim(JwtRegisteredClaimNames.Iss,_issuer),
                 new Claim(JwtRegisteredClaimNames.Aud,_audience),
                 new Claim("Guid",Guid.NewGuid().ToString("D")),
-                //new Claim(ClaimTypes.Role,"system"),
+                new Claim("user",username),
+                new Claim("type",nameof(tokenType)),
+                new Claim(ClaimTypes.Role,nameof(tokenType)),
                 //new Claim(ClaimTypes.Role,"admin"),
-        };
+             };
 
             // 2. 从 appsettings.json 中读取SecretKey
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
@@ -61,7 +84,7 @@ namespace FishManagementSystem.JWT
                 _audience,   //Audience
                 claims,                          //Claims,
                 DateTime.Now,                    //notBefore
-                DateTime.Now.AddMinutes(_expired),    //expires
+                DateTime.Now.AddMinutes(_expired),//expires
                 signingCredentials               //Credentials
             );
 
@@ -69,6 +92,19 @@ namespace FishManagementSystem.JWT
             var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
             return token;
+        }
+
+
+
+        public bool DecodeToken(string token)
+        {
+
+            var f = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+            return true;
+
+
+
         }
     }
 }

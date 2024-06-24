@@ -3,6 +3,7 @@ using FishManagementSystem.Commons;
 using FishManagementSystem.DBModels.Models;
 using FishManagementSystem.IBussinessService;
 using FishManagementSystem.JWT;
+using FishManagementSystem.SSO.ReqDto;
 using FishManagementSystem.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -47,8 +48,11 @@ namespace FishManagementSystem.SSO.Controllers
         /// <returns></returns>
         [HttpPost]
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
-        public ApiResult Post(string usernameOrEmail, string password)
+        public ApiResult Post(ReqUserInfoDto reqUserInfoDto)
         {
+
+            string usernameOrEmail = reqUserInfoDto.UsernameOfEmail;
+            string password = reqUserInfoDto.Password;
 
 
             var tData = _dataService.Get<TSystemUsers>(o => (o.Username == usernameOrEmail || o.Email == usernameOrEmail) && o.Password == password).FirstOrDefault();
@@ -58,19 +62,23 @@ namespace FishManagementSystem.SSO.Controllers
                 return new ApiResult()
                 {
 
-                    Message = "密码错误",
+                    Message = "密码错误,请重试！",
                     IsSuccess = false,
                 };
             }
 
-
-            string token = _jwtToken.CreateToken(tData.Username, new string[] { "username", "password" });
-
+            string accessToken = _jwtToken.CreateToken(TokenType.Access, tData.Username);
+            string refreshToken = _jwtToken.CreateToken(TokenType.Refresh, tData.Username);
             return new ApiResult()
             {
                 Message = "密码正确",
                 IsSuccess = true,
-                Data = token
+                Data = new
+                {
+                    access_token = accessToken,
+                    refresh_token = refreshToken,
+                    username = tData.Username
+                }
             };
 
         }
