@@ -116,12 +116,12 @@ namespace FishManagementSystem.JWT
 
             JwtSecurityToken securityToken = _JwtSecurityTokenHandler.ReadJwtToken(token);
 
-            TimeSpan ts = securityToken.ValidFrom - DateTime.Now;
+            TimeSpan ts = DateTime.Now - securityToken.ValidTo;
             int TimeConsuming = Convert.ToInt32(ts.TotalMinutes);
 
             if (TimeConsuming > overMinutes) return false;
 
-            if (securityToken.Issuer == _issuer) return false;
+            if (securityToken.Issuer != _issuer) return false;
 
             if (!securityToken.Audiences.Any(o => o == _audience)) return false;
 

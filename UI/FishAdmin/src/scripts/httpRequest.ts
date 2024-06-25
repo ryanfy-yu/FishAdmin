@@ -13,16 +13,22 @@ const httpRequest = {
             url: url,
             params: params
         }
-        // if (params) config.params = params
         return axiosExt(config)
     },
-    post(url: string, params: object) {
+    post(url: string, data: object) {
         const config = {
             method: 'post',
             url: url,
-            data: params
+            data: data
         }
-        // if (params) config.data = params
+        return axiosExt(config)
+    },
+    delete(url: string, data: object) {
+        const config = {
+            method: 'post',
+            url: url,
+            data: data
+        }
         return axiosExt(config)
     },
 }

@@ -20,7 +20,7 @@ const router = createRouter({
         },
         {
           path: '/datalist/usermanage',
-          component: () => import('@/views/DataTable/DataTable.vue')
+          component: () => import('@/views/DataTable/SystemUser/DataTable.vue')
         },
         {
           path: '/datalist/menumanage',

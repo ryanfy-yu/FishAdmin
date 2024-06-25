@@ -1,4 +1,5 @@
 ﻿using FishManagementSystem.IDBModels;
+using SqlSugar;
 using System.Linq.Expressions;
 
 namespace FishManagementSystem.IBussinessService
@@ -14,7 +15,7 @@ namespace FishManagementSystem.IBussinessService
 
         public T Get<T>(string id) where T : IModel, new();
 
-        public List<T> Get<T>(int pagenumber, int pageSize, ref int totalCount, ref int totalPage, Expression<Func<T, bool>>? exp, List<dynamic>? orderbymoderList) where T : IModel, new();
+        public List<T> Get<T>(int pagenumber, int pageSize, ref int totalCount, ref int totalPage, List<IConditionalModel>? condList, List<OrderByModel>? orderbymoderList) where T : IModel, new();
 
         public List<T> Get<T>() where T : IModel, new();
 

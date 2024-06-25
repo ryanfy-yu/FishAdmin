@@ -37,33 +37,33 @@ namespace FishManagementSystem.BusinessService
 
         public List<T> Get<T>() where T : IModel, new()
         {
-            return _db.Queryable<T>().Where(it => it.IsDeleted != true).ToList();
+            return _db.Queryable<T>().Where(it => it.IsDeleted != true).OrderByDescending(o => o.CreateDate).ToList();
         }
 
         public List<T> Get<T>(Expression<Func<T, bool>> exp) where T : IModel, new()
         {
-            return _db.Queryable<T>().Where(it => it.IsDeleted != true).Where(exp).ToList();
+            return _db.Queryable<T>().Where(it => it.IsDeleted != true).Where(exp).OrderByDescending(o => o.CreateDate).ToList();
         }
 
 
-        public List<T> Get<T>(int pagenumber, int pageSize, ref int totalCount, ref int totalPage, Expression<Func<T, bool>>? exp, List<dynamic>? orderbyModerList) where T : IModel, new()
+        public List<T> Get<T>(int pagenumber, int pageSize, ref int totalCount, ref int totalPage, List<IConditionalModel>? condList, List<OrderByModel>? orderbyModerList) where T : IModel, new()
         {
 
             List<T>? resultList = null;
 
-            if (exp != null)
+            if (condList != null && condList.Count > 0)
             {
                 if (orderbyModerList != null && orderbyModerList.Count > 0)
                 {
 
                     List<OrderByModel> _orderbyModerList = orderbyModerList.OfType<OrderByModel>().ToList();
 
-                    resultList = _db.Queryable<T>().Where(it => it.IsDeleted != true).Where(exp).OrderBy(_orderbyModerList).ToPageList(pagenumber, pageSize, ref totalCount, ref totalPage);
+                    resultList = _db.Queryable<T>().Where(it => it.IsDeleted != true).Where(condList).OrderBy(_orderbyModerList).ToPageList(pagenumber, pageSize, ref totalCount, ref totalPage);
 
                 }
                 else
                 {
-                    resultList = _db.Queryable<T>().Where(it => it.IsDeleted != true).Where(exp).OrderBy(o => SqlFunc.Desc(o.CreateDate)).ToPageList(pagenumber, pageSize, ref totalCount, ref totalPage);
+                    resultList = _db.Queryable<T>().Where(it => it.IsDeleted != true).Where(condList).OrderBy(o => SqlFunc.Desc(o.CreateDate)).ToPageList(pagenumber, pageSize, ref totalCount, ref totalPage);
                 }
             }
             else
