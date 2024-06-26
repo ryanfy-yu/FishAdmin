@@ -90,13 +90,19 @@ namespace FishManagementSystem.BusinessService
         {
 
             model.Add("CreateDate", DateTime.Now);
+            model.Add("IsDeleted", false);
             return _db.Insertable<T>(model).ExecuteCommand() > 0;
         }
 
         public int Add<T>(List<Dictionary<string, object>> list) where T : IModel, new()
         {
 
-            list.ForEach(o => o.Add("CreateDate", DateTime.Now));
+            list.ForEach(o =>
+            {
+                o.Add("CreateDate", DateTime.Now);
+                o.Add("IsDeleted", false);
+
+            });
             return _db.Insertable(list).ExecuteCommand();
         }
 

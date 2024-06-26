@@ -85,7 +85,7 @@ const dataLoad = () => {
           index: '3',
           title: '菜单管理',
           icon: 'Document',
-          path: '/datalist/menumanage',
+          path: '/datalist/systemmenu',
         }
       ]
     },

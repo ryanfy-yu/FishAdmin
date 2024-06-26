@@ -1,77 +1,61 @@
 <template>
-  <el-form :model="form" label-width="auto" style="max-width: 600px">
-    <el-form-item label="Activity name">
-      <el-input v-model="form.name" />
-    </el-form-item>
-    <el-form-item label="Activity zone">
-      <el-select v-model="form.region" placeholder="please select your zone">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="Activity time">
-      <el-col :span="11">
-        <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%" />
-      </el-col>
-      <el-col :span="2" class="text-center">
-        <span class="text-gray-500">-</span>
-      </el-col>
-      <el-col :span="11">
-        <el-time-picker v-model="form.date2" placeholder="Pick a time" style="width: 100%" />
-      </el-col>
-    </el-form-item>
-    <el-form-item label="Instant delivery">
-      <el-switch v-model="form.delivery" />
-    </el-form-item>
-    <el-form-item label="Activity type">
-      <el-checkbox-group v-model="form.type">
-        <el-checkbox value="Online activities" name="type">
-          Online activities
-        </el-checkbox>
-        <el-checkbox value="Promotion activities" name="type">
-          Promotion activities
-        </el-checkbox>
-        <el-checkbox value="Offline activities" name="type">
-          Offline activities
-        </el-checkbox>
-        <el-checkbox value="Simple brand exposure" name="type">
-          Simple brand exposure
-        </el-checkbox>
-      </el-checkbox-group>
-    </el-form-item>
-    <el-form-item label="Resources">
-      <el-radio-group v-model="form.resource">
-        <el-radio value="Sponsor">Sponsor</el-radio>
-        <el-radio value="Venue">Venue</el-radio>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="Activity form">
-      <el-input v-model="form.desc" type="textarea" />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" :icon="Search" @click="onSubmit">Search</el-button>
-      <el-button>Reset</el-button>
-    </el-form-item>
-  </el-form>
+  <el-form inline label-width="auto">
 
+    <template v-for="item in searchList">
+      <el-form-item v-if="item.formField == 'input'" :label="item.label">
+        <el-input v-model="item.value" />
+      </el-form-item>
+    </template>
+
+  </el-form>
+  <div>
+    <el-button type="primary" @click="onSubmit">查询</el-button>
+    <el-button @click="onReset" >清空</el-button>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-// do not use same name with ref
-const form = ref({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
-})
+const searchList = ref<Array<any>>([])
+
+const dataLoad = function (tableColumn: Array<any>) {
+  let list = <Array<any>>[]
+
+  tableColumn.forEach(item => {
+
+    if (item.queryable) {
+      list.push({ index: item.index, prop: item.prop, label: item.label, formField: item.formField, value: '' })
+    }
+  })
+
+  searchList.value = list.sort((a, b) => a.index - b.index)
+
+}
+
+const onReset=()=>{
+  searchList.value.forEach(o=>o.value="")
+
+}
 
 const onSubmit = () => {
-  console.log('submit!')
+  
+  interface obj {
+    [idx: string]: any
+  }
+  let searchBody: obj = {}
+  searchList.value.forEach(o => {
+    if (o.value != "") {
+
+      searchBody[o.prop] = o.value
+    }
+  })
+
+  emits("clickSearch", searchBody)
+  //console.log('submit!')
 }
+
+const emits = defineEmits(["clickSearch"])
+
+defineExpose({ dataLoad })
 </script>

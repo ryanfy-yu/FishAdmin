@@ -4,72 +4,187 @@ using FishManagementSystem.DBModels.Models;
 using FishManagementSystem.DTO;
 using FishManagementSystem.IBussinessService;
 using FishManagementSystem.Mapping;
+using FishManagementSystem.Server.ReqDto;
 using FishManagementSystem.Server.Utils;
 using FishManagementSystem.Swagger;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SqlSugar;
+using System.Linq.Expressions;
+using System.Reflection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace FishManagementSystem.Server.Controllers.Menu
+namespace FishManagementSystem.Server.Controllers.User
 {
     /// <summary>
     /// 系统用户
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class MenuController : FishControllerBase
+    public class SystemMenuController : FishControllerBase
     {
-        public readonly IDataService _dataService;
+        public readonly ISystemUsersDataService _dataService;
 
 
-        public MenuController(IDataService dataService, IMapper mapper, ILogger<MenuController> logger) : base(logger, mapper)
+        public SystemMenuController(ISystemUsersDataService dataService, IMapper mapper, ILogger<SystemMenuController> logger) : base(logger, mapper)
         {
             _dataService = dataService;
 
         }
-
-
         /// <summary>
-        /// GetSystemMenuList
+        /// 获取列表数据
         /// </summary>
+        /// <param name="json"></param>
         /// <returns></returns>
-        [HttpGet(Name = "GetMenuList")]
+        [HttpGet]
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
-        public ApiResult GetSystemMenuList()
+        public ApiResult Get([FromQuery] ReqPaginationDto dto)
         {
-            //_logger.LogInformation("i am here");
-            var tData = _dataService.Get<TSystemMenus>();
 
-            var dataList = _mapper.Map<List<TSystemMenus>>(tData);
-
-            return new ApiResult()
+            try
             {
-                Data = dataList,
-                IsSuccess = true,
 
-            };
+                int total = 0;
+                int totalPages = 0;
+
+                //排序
+                List<OrderByModel> orderList = null;
+                if (!string.IsNullOrEmpty(dto.OrderProp))
+                {
+                    orderList = OrderByModel.Create(
+                      new OrderByModel() { FieldName = dto.OrderProp, OrderByType = dto.Orderby.Contains("desc") ? OrderByType.Desc : OrderByType.Asc }
+                     );
+                }
+
+                //组装查询条件
+                var conModels = new List<IConditionalModel>();
+                if (dto.SearchBody != null)
+                {
+                    var dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(dto.SearchBody);
+
+                    foreach (var key in dic.Keys)
+                    {
+                        string value = dic[key];
+
+                        conModels.Add(new ConditionalModel { FieldName = key, ConditionalType = ConditionalType.Like, FieldValue = value });
+
+                    }
+                }
+
+                var data = _dataService.Get<TSystemMenus>(dto.CurrentPage, dto.PageSize, ref total, ref totalPages, conModels, orderList);
+
+                return new ApiResult()
+                {
+                    Data = new { data = data, total = total, totalPages = totalPages },
+                    IsSuccess = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResult()
+                {
+                    Error = ex.Message,
+                    IsSuccess = false,
+
+                };
+            }
+        }
+
+        /// <summary>
+        /// 提交数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
+        public ApiResult Post(Dictionary<string, object> dto)
+        {
+            var result = _dataService.Add<TSystemMenus>(dto);
+
+            if (result)
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = true,
+
+                };
+            }
+            else
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = false,
+
+                };
+
+            }
 
         }
 
         /// <summary>
-        /// 添加菜单
+        /// 更新数据
         /// </summary>
-        /// <param name="users"></param>
-        /// <param name="password"></param>
         /// <returns></returns>
-        [HttpPost(Name = "AddSystemMenus")]
-        public ApiResult AddSystemMenus(Dictionary<string, object> menu)
+        [HttpPut]
+        [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
+        public ApiResult Put(Dictionary<string, object> dto)
         {
+            var result = _dataService.Update<TSystemMenus>(dto);
 
-            _dataService.Add<TSystemMenus>(menu);
-
-            var data = _dataService.Get<TSystemMenus>();
-
-            return new ApiResult()
+            if (result)
             {
-                Data = data,
-                IsSuccess = true,
+                return new ApiResult()
+                {
+                    IsSuccess = true,
 
-            };
+                };
+            }
+            else
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = false,
+
+                };
+
+            }
 
         }
+
+
+        /// <summary>
+        /// 刪除数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
+        public ApiResult Delete(string id)
+        {
+            var result = _dataService.Delete<TSystemMenus>(id);
+
+
+            if (result)
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = true,
+
+                };
+            }
+            else
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = false,
+
+                };
+
+            }
+
+
+
+        }
+
+
     }
 }

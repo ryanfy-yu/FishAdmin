@@ -27,7 +27,9 @@ const dataLoad = function (item: any, tableColumn: Array<any>) {
 
     const column = tableColumn.find(o => o.prop == key)
 
-    list.push({ label: column.label, value: item[key], index: column.index })
+    if(column){
+      list.push({ label: column.label, value: item[key], index: column.index })
+    }
   }
   detail.value = list.sort((a, b) => a.index - b.index)
 

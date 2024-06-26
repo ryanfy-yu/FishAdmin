@@ -7,11 +7,14 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddView: typeof import('./src/components/DataTable/AddView.vue')['default']
     Breadcrumb: typeof import('./src/components/Index/Breadcrumb.vue')['default']
     DataSearch: typeof import('./src/components/DataTable/DataSearch.vue')['default']
     DataTable: typeof import('./src/components/DataTable/DataTable.vue')['default']
     Detail: typeof import('./src/components/DataTable/detail.vue')['default']
+    DetailView: typeof import('./src/components/DataTable/DetailView.vue')['default']
     Edit: typeof import('./src/components/DataTable/Edit.vue')['default']
+    EditView: typeof import('./src/components/DataTable/EditView.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
@@ -58,6 +61,7 @@ declare module 'vue' {
     Header: typeof import('./src/components/Index/Header.vue')['default']
     Menus: typeof import('./src/components/Index/Menus.vue')['default']
     MenusTree: typeof import('./src/components/Index/MenusTree.vue')['default']
+    PaginationView: typeof import('./src/components/DataTable/PaginationView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TableButtons: typeof import('./src/components/DataTable/TableButtons.vue')['default']

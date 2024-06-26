@@ -31,9 +31,9 @@
         </template>
         <el-scrollbar>
           <router-view v-slot="{ Component }">
-            <keep-alive>
+            <!-- <keep-alive> -->
               <component :is="Component" />
-            </keep-alive>
+            <!-- </keep-alive> -->
           </router-view>
         </el-scrollbar>
       </el-tabs>

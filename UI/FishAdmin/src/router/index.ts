@@ -14,17 +14,12 @@ const router = createRouter({
       component: ()=>import("@/views/IndexView.vue"),
       children: [
         {
-          path: '/datalist',
-          props: true,
-          component: () => import('@/views/DataTable/DataTable.vue')
-        },
-        {
           path: '/datalist/usermanage',
           component: () => import('@/views/DataTable/SystemUser/DataTable.vue')
         },
         {
-          path: '/datalist/menumanage',
-          component: () => import('@/views/DataTable/DataTable.vue')
+          path: '/datalist/systemmenu',
+          component: () => import('@/views/DataTable/SystemMenu/DataTable.vue')
         },
         {
           path: '/home',

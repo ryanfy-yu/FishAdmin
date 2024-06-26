@@ -17,27 +17,6 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
 
     const homeTabsStore = useHomeTabsStore()
 
-    //激活首页
-    // const setDefaultActive = function () {
-
-    //     router.isReady().then(() => {
-
-    //         let menu = menuList.value.find(o => o.index == "/home") || menuList.value[0]
-
-    //         homeTabsStore.addTab({
-    //             index: menu.index,
-    //             title: menu.title,
-    //             icon: menu.icon,
-    //             path: menu.path,
-    //             isCloseable: false
-    //         })
-
-    //         defaultActive.value = menu.index
-    //         router.push(menu.path || "/index/home")
-    //     }
-    //     )
-    // }
-
     const clickMenuItem = function (menuItem: any) {
 
         defaultActive.value = menuItem.index
@@ -53,7 +32,6 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
     const clear = function () {
 
         menuList.value = []
-        // tabIndex.value = 0
         defaultActive.value = ""
         sessionStorage.removeItem("homeMenus")
 
