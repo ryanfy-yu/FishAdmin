@@ -25,6 +25,10 @@ namespace FishManagementSystem.DBModels.Utils
                 ConnectionString = dbConnectionString,
                 DbType = DbType.MySql,
                 IsAutoCloseConnection = true,
+                MoreSettings = new ConnMoreSettings()
+                {
+                    IsAutoRemoveDataCache = true//所有 增、删 、改 会自动调用.RemoveDataCache()
+                },
                 ConfigureExternalServices = new ConfigureExternalServices
                 {
                     //注意:  这儿AOP设置不能少

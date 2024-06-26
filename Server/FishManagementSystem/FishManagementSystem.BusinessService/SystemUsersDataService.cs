@@ -16,10 +16,10 @@ namespace FishManagementSystem.BusinessService
 
         public bool AddSystemUserInfo(string username, string pwd)
         {
-            return this.Add<TSystemUsers>(new TSystemUsers
+            return this.Add<TSystemUsers>(new Dictionary<string, object>()
             {
-                Username = username,
-                Password = pwd
+                { "Username" ,username },
+                { "Password" , pwd }
 
             });
         }

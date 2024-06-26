@@ -45,7 +45,7 @@ namespace FishManagementSystem.SSO.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public ApiResult Post(string accessToken)
+        public ApiResult Post([FromBody] string? accessToken)
         {
             string user = string.Empty;
             var isValid = _jwtToken.ValidateToken(accessToken, 60, ref user);

@@ -67,7 +67,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(o =>
 
 
 #region ¿çÓò
-
+//var origins = builder.Configuration["Origins"].Split(",");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("allcors", o =>

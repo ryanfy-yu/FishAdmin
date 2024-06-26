@@ -8,9 +8,12 @@ using FishManagementSystem.Server.ReqDto;
 using FishManagementSystem.Server.Utils;
 using FishManagementSystem.Swagger;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SqlSugar;
 using System.Linq.Expressions;
 using System.Reflection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FishManagementSystem.Server.Controllers.User
 {
@@ -29,68 +32,76 @@ namespace FishManagementSystem.Server.Controllers.User
             _dataService = dataService;
 
         }
-
         /// <summary>
-        /// GetSystemUsers
+        /// 获取列表数据
         /// </summary>
+        /// <param name="json"></param>
         /// <returns></returns>
-        //[HttpGet]
-        //[ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
-        //public ApiResult Get()
-        //{
-        //    //_logger.LogInformation("i am here");
-        //    var data = _dataService.GetSystemUserInfoList();
+        [HttpGet]
+        [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
+        public ApiResult Get([FromQuery] ReqPaginationDto dto)
+        {
 
-        //    //var dtoData = _mapper.Map<List<SystemUsersDTO>>(data);
+            try
+            {
 
-        //    return new ApiResult()
-        //    {
-        //        Data = data,
-        //        IsSuccess = true,
+                int total = 0;
+                int totalPages = 0;
 
-        //    };
+                //排序
+                List<OrderByModel> orderList = null;
+                if (!string.IsNullOrEmpty(dto.OrderProp))
+                {
+                    orderList = OrderByModel.Create(
+                      new OrderByModel() { FieldName = dto.OrderProp, OrderByType = dto.Orderby.Contains("desc") ? OrderByType.Desc : OrderByType.Asc }
+                     );
+                }
 
-        //}
+                //组装查询条件
+                var conModels = new List<IConditionalModel>();
+                if (dto.SearchBody != null)
+                {
+                    var dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(dto.SearchBody);
+
+                    foreach (var key in dic.Keys)
+                    {
+                        string value = dic[key];
+
+                        conModels.Add(new ConditionalModel { FieldName = key, ConditionalType = ConditionalType.Like, FieldValue = value });
+
+                    }
+                }
+
+                var data = _dataService.Get<TSystemUsers>(dto.CurrentPage, dto.PageSize, ref total, ref totalPages, conModels, orderList);
+
+                return new ApiResult()
+                {
+                    Data = new { data = data, total = total, totalPages = totalPages },
+                    IsSuccess = true,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResult()
+                {
+                    Error = ex.Message,
+                    IsSuccess = false,
+
+                };
+            }
+        }
 
         /// <summary>
-        /// GetSystemUsers
+        /// 提交数据
         /// </summary>
         /// <returns></returns>
         [HttpPost]
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
-        public ApiResult Post(ReqPaginationDto dto)
+        public ApiResult Post(Dictionary<string, object> dto)
         {
-
-            int total = 0;
-            int totalPages = 0;
-
-            List<OrderByModel> orderList = null;
-
-            if (!string.IsNullOrEmpty(dto.OrderProp))
-            {
-                orderList = OrderByModel.Create(
-                  new OrderByModel() { FieldName = dto.OrderProp, OrderByType = dto.Orderby.Contains("desc") ? OrderByType.Desc : OrderByType.Asc }
-  );
-            }
-
-            //组装查询条件
-            var conModels = new List<IConditionalModel>();
-            if (dto.searchList != null && dto.searchList.Count > 0)
-            {
-
-                dto.searchList.ForEach(o =>
-                {
-                    conModels.Add(new ConditionalModel { FieldName = o.prop, ConditionalType = ConditionalType.Like, FieldValue = o.value });
-
-                });
-
-            }
-
-            var data = _dataService.Get<TSystemUsers>(dto.CurrentPage, dto.PageSize, ref total, ref totalPages, conModels, orderList);
-
+            _dataService.Add<TSystemUsers>(dto);
             return new ApiResult()
             {
-                Data = new { data = data, total = total, totalPages = totalPages },
                 IsSuccess = true,
 
             };
@@ -98,29 +109,36 @@ namespace FishManagementSystem.Server.Controllers.User
         }
 
         /// <summary>
-        /// 添加用户
+        /// 更新数据
         /// </summary>
-        /// <param name="users"></param>
-        /// <param name="password"></param>
         /// <returns></returns>
-        //[HttpPost(Name = "AddSystemUser")]
-        //public ApiResult AddSystemUser(string users, string password)
-        //{
-        //    _dataService.AddSystemUserInfo(users, password);
+        [HttpPut]
+        [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
+        public ApiResult Put(Dictionary<string, object> dto)
+        {
+            var result = _dataService.Update<TSystemUsers>(dto);
+
+            if (result)
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = true,
+
+                };
+            }
+            else
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = false,
+
+                };
+
+            }
 
 
-        //    var data = _dataService.GetSystemUserInfoList();
 
-        //    var dtoData = _mapper.Map<List<SystemUsersDTO>>(data);
-
-        //    return new ApiResult()
-        //    {
-        //        Data = dtoData,
-        //        IsSuccess = true,
-
-        //    };
-
-        //}
+        }
 
 
     }

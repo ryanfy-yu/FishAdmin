@@ -5,6 +5,7 @@ using FishManagementSystem.IBussinessService;
 using FishManagementSystem.IDBModels;
 using Microsoft.Extensions.Configuration;
 using SqlSugar;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace FishManagementSystem.BusinessService
@@ -85,26 +86,25 @@ namespace FishManagementSystem.BusinessService
         }
 
 
-        public bool Add<T>(T model) where T : IModel, new()
+        public bool Add<T>(Dictionary<string, object> model) where T : IModel, new()
         {
-            model.CreateDate = DateTime.Now;
+
+            model.Add("CreateDate", DateTime.Now);
             return _db.Insertable<T>(model).ExecuteCommand() > 0;
         }
 
-        public int Add<T>(List<T> list) where T : IModel, new()
+        public int Add<T>(List<Dictionary<string, object>> list) where T : IModel, new()
         {
-            list.ForEach(o => o.CreateDate = DateTime.Now);
+
+            list.ForEach(o => o.Add("CreateDate", DateTime.Now));
             return _db.Insertable(list).ExecuteCommand();
         }
 
 
         public bool Delete<T>(string id) where T : IModel, new()
         {
-            var model = this.Get<T>(id);
-            model.IsDeleted = true;
-            model.UpdateDate = DateTime.Now;
 
-            return _db.Updateable<T>(model).ExecuteCommand() > 0;
+            return _db.Updateable<T>().SetColumns(o => o.IsDeleted == true, o => o.UpdateDate == DateTime.Now).Where(o => o.Id == id).ExecuteCommand() > 0;
 
         }
 
@@ -118,14 +118,37 @@ namespace FishManagementSystem.BusinessService
             return _db.Updateable<T>(list).ExecuteCommand();
         }
 
+        public int Delete<T>(List<string> ids) where T : IModel, new()
+        {
+
+            return _db.Updateable<T>().SetColumns(o => o.IsDeleted == true, o => o.UpdateDate == DateTime.Now).Where(o => ids.Contains(o.Id)).ExecuteCommand();
+        }
+
+
+        public bool Update<T>(Dictionary<string, object> model) where T : IModel, new()
+        {
+            model.Add("UpdateDate", DateTime.Now);
+            return _db.Updateable<T>(model).ExecuteCommand() > 0;
+        }
+
+
         public bool Update<T>(T model) where T : IModel, new()
         {
             model.UpdateDate = DateTime.Now;
             return _db.Updateable<T>(model).ExecuteCommand() > 0;
         }
 
+        public int Update<T>(List<Dictionary<string, object>> list) where T : IModel, new()
+        {
+
+            list.ForEach(o => o.Add("UpdateDate", DateTime.Now));
+            return _db.Updateable<T>(list).ExecuteCommand();
+        }
+
+
         public int Update<T>(List<T> list) where T : IModel, new()
         {
+
             list.ForEach(o => o.UpdateDate = DateTime.Now);
             return _db.Updateable<T>(list).ExecuteCommand();
         }

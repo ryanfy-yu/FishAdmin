@@ -56,7 +56,7 @@ namespace FishManagementSystem.Server.Controllers.Menu
         /// <param name="password"></param>
         /// <returns></returns>
         [HttpPost(Name = "AddSystemMenus")]
-        public ApiResult AddSystemMenus(TSystemMenus menu)
+        public ApiResult AddSystemMenus(Dictionary<string, object> menu)
         {
 
             _dataService.Add<TSystemMenus>(menu);

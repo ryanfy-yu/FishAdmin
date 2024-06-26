@@ -4,38 +4,87 @@
         <el-container>
             <el-main>
                 <el-row class="row-bg" justify="center" align="middle" style="height: 100%;">
-                    <el-col :span="6" @keyup.enter="submitToLogin">
+                    <el-col :span="6" style="min-width: 400px;">
                         <div class="grid-content title">
                             Login
                         </div>
-                        <div class="grid-content">
-                            <el-input v-model="usernameOfEmail" style="width: 100%" placeholder="请输入用户名或者邮箱" />
-                        </div>
-                        <div class="grid-content">
-                            <el-input v-model="password" type="password" style="width: 100" placeholder="请输入密码" />
-                        </div>
-                        <div class="grid-content">
 
-                            <el-button size="large" style="margin: auto" :loading="isLoding" round
-                                :disabled="validateForm" @click="submitToLogin">Login</el-button>
-                        </div>
+                        <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="auto"
+                            class="demo-ruleForm" status-icon @keyup.enter="submitForm(ruleFormRef)">
+                            <el-form-item prop="username">
+                                <el-input v-model="ruleForm.username" laceholder="请输入用户名或者邮箱" aria-label="请输入用户名或者邮箱" />
+                            </el-form-item>
+
+                            <el-form-item prop="password">
+                                <el-input v-model="ruleForm.password" type="password" laceholder="请输入密码"
+                                    aria-label="请输入用户名或者邮箱" />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button size="large" style="margin: auto" :loading="isLoding" round
+                                    @click="submitForm(ruleFormRef)">
+                                    Login
+                                </el-button>
+                            </el-form-item>
+
+                        </el-form>
+
                     </el-col>
                 </el-row>
-
             </el-main>
         </el-container>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import httpRequest from '@/scripts/httpRequest'
 import { useUserInfoStore } from '@/stores/userInfo';
 import { ElMessage } from 'element-plus'
+import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
 
-const usernameOfEmail = ref("")
-const password = ref("")
+interface RuleForm {
+    username: string | null
+    password: string | null
+}
+
+const ruleFormRef = ref<FormInstance>()
+const ruleForm = reactive<RuleForm>({
+    username: null,
+    password: null,
+})
+
+const rules = reactive<FormRules<RuleForm>>({
+    username: [
+        { required: true, message: '请输入用户名或邮箱', trigger: 'blur' },
+        { min: 5, max: 16, message: '长度5到16', trigger: 'blur' },
+    ],
+    password: [
+        {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur',
+        },
+        { min: 5, max: 16, message: '长度5到16位', trigger: 'blur' },
+    ]
+})
+
+
+const submitForm = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+
+            submitToLogin()
+
+            console.log('submit!')
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
+}
+
+
 const isLoding = ref(false)
 
 const userinfoStore = useUserInfoStore()
@@ -44,18 +93,15 @@ const router = useRouter()
 
 const submitToLogin = () => {
 
-    if (!validateForm) return;
-
     isLoding.value = true;
 
     httpRequest.post("http://localhost:5142/api/Login",
         {
-            UsernameOfEmail: usernameOfEmail.value,
-            Password: password.value
+            UsernameOfEmail: ruleForm.username,
+            Password: ruleForm.password
         })
         .then(function (response) {
             // 处理成功情况
-            //console.log(response.data.data);
             if (response.data.isSuccess) {
                 userinfoStore.accessToken = response.data.data.access_token
                 userinfoStore.refreshToken = response.data.data.refresh_token
@@ -68,16 +114,10 @@ const submitToLogin = () => {
 
                 //2秒跳转
                 setInterval(() => {
-
                     router.push("/index")
-
-                }, 2000)
-
-
+                }, 1000)
             }
-            // else {
-            //     ElMessage.error(response.data.message)
-            // }
+
         })
         .catch(function (error) {
             // 处理错误情况
@@ -90,9 +130,6 @@ const submitToLogin = () => {
 
 }
 
-const validateForm = computed(() => {
-    return usernameOfEmail.value === "" || password.value === ""
-})
 
 
 </script>
@@ -119,14 +156,22 @@ const validateForm = computed(() => {
     opacity: 0.8;
 }
 
-.grid-content {
+
+
+.demo-ruleForm {
     padding: 15px;
     text-align: center;
-
 }
+
+.el-form-item {
+
+    padding: 5px;
+}
+
 
 .title {
     color: #E5EAF3;
     font-size: 48px;
+    text-align: center;
 }
 </style>

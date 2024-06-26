@@ -9,8 +9,8 @@
 
   </el-form>
   <div>
-    <el-button type="primary" @click="onSubmit">Search</el-button>
-    <el-button>Reset</el-button>
+    <el-button type="primary" @click="onSubmit">查询</el-button>
+    <el-button @click="onReset" >清空</el-button>
   </div>
 </template>
 
@@ -21,7 +21,6 @@ const searchList = ref<Array<any>>([])
 
 const dataLoad = function (tableColumn: Array<any>) {
   let list = <Array<any>>[]
-  //searchList.value = tableColumn
 
   tableColumn.forEach(item => {
 
@@ -34,18 +33,25 @@ const dataLoad = function (tableColumn: Array<any>) {
 
 }
 
+const onReset=()=>{
+  searchList.value.forEach(o=>o.value="")
 
+}
 
 const onSubmit = () => {
-  let list = <Array<any>>[]
-
+  
+  interface obj {
+    [idx: string]: any
+  }
+  let searchBody: obj = {}
   searchList.value.forEach(o => {
     if (o.value != "") {
-      list.push({ prop: o.prop, value: o.value })
+
+      searchBody[o.prop] = o.value
     }
   })
 
-  emits("clickSearch", list)
+  emits("clickSearch", searchBody)
   //console.log('submit!')
 }
 

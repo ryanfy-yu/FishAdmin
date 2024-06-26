@@ -1,5 +1,5 @@
 import axiosExt from '@/scripts/axiosExt'
-
+import qs from 'qs'
 
 const httpRequest = {
     /**
@@ -8,10 +8,19 @@ const httpRequest = {
      * @param params 请求参数
      */
     get(url: string, params: object) {
+
         const config = {
             method: 'get',
             url: url,
-            params: params
+            params: params,
+        }
+        return axiosExt(config)
+    },
+    put(url: string, data: object) {
+        const config = {
+            method: 'put',
+            url: url,
+            data: data
         }
         return axiosExt(config)
     },

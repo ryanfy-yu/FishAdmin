@@ -23,24 +23,26 @@ namespace FishManagementSystem.IBussinessService
         public List<T> Get<T>(Expression<Func<T, bool>> exp) where T : IModel, new();
 
 
-        public bool Add<T>(T model) where T : IModel, new();
+        public bool Add<T>(Dictionary<string, object> model) where T : IModel, new();
 
 
-        public int Add<T>(List<T> list) where T : IModel, new();
+        public int Add<T>(List<Dictionary<string, object>> list) where T : IModel, new();
 
 
 
         public bool Delete<T>(string id) where T : IModel, new();
 
 
-        public int Delete<T>(List<T> list) where T : IModel, new();
+        public int Delete<T>(List<string> ids) where T : IModel, new();
 
+
+        public bool Update<T>(Dictionary<string, object> model) where T : IModel, new();
 
         public bool Update<T>(T model) where T : IModel, new();
 
 
+        public int Update<T>(List<Dictionary<string,object>> list) where T : IModel, new();
+
         public int Update<T>(List<T> list) where T : IModel, new();
-
-
     }
 }

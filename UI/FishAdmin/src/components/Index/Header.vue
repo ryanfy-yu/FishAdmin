@@ -54,11 +54,13 @@ import { useDark } from "@vueuse/core"
 import { useUserInfoStore } from '@/stores/userInfo';
 import { useHomeMenusStore } from '@/stores/homeMenus';
 import { useHomeTabsStore } from '@/stores/homeTabs';
+import { useRouter } from 'vue-router';
 
 const logoutDialogVisible = ref(false)
 const userInfoStore = useUserInfoStore()
 const homeMenusStore = useHomeMenusStore()
 const hometabsStore = useHomeTabsStore()
+const router = useRouter()
 
 const logout = () => {
   // var pinia =createPinia()
@@ -67,8 +69,8 @@ const logout = () => {
   homeMenusStore.clear()
   hometabsStore.clear()
 
+  router.push("/login")
 
-  location.reload();
 
 
 }

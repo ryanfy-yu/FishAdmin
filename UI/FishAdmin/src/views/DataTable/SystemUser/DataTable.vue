@@ -18,6 +18,7 @@
     </div>
     <el-scrollbar style="height: 100%;">
       <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
+
         <el-table-column v-if="tableConfig.Selection" type="selection" width="40" />
         <el-table-column v-for="item in tableColumn" :prop="item.prop" :label="item.label" sortable="custom" />
 
@@ -44,7 +45,7 @@
     </el-scrollbar>
   </div>
   <DetailView ref="childDetail"></DetailView>
-  <EditView ref="childEdit"></EditView>
+  <EditView ref="childEdit" @callback="editCallBack"></EditView>
 </template>
 
 
@@ -56,12 +57,11 @@ import DetailView from '@/views/DataTable/SystemUser/DetailView.vue'
 import EditView from '@/views/DataTable/SystemUser/EditView.vue'
 import TablePagination from '@/views/DataTable/SystemUser/PaginationView.vue'
 import httpRequest from '@/scripts/httpRequest'
-
 import { columns, opConfig } from "@/scripts/tableConfig/systemUser"
+import { ElMessageBox } from 'element-plus'
 
-const orderby = ref({ prop: "createDate", order: "desc" })
+//数据对象
 const tableData = ref([])
-
 
 
 //表配置
@@ -75,51 +75,65 @@ const childEdit = ref()
 const childSearch = ref()
 const childPagination = ref()
 
+//列表按钮操作
 const handleClick = function (opType: string, index: number, row: object) {
   switch (opType) {
     case "Detail":
       childDetail.value.dataLoad(row, tableColumn)
       break;
     case "Edit":
-      childEdit.value.dataLoad(row, tableColumn)
+      childEdit.value.dataLoad(row, tableColumn, tableConfig)
       break;
     default: break;
   }
 }
 
-let searchList = <Array<any>>[]
-const clickSearch = function (list: Array<any>[]) {
-  searchList = list
+//查询
+let searchBody = {}
+const clickSearch = function (body: object) {
+  searchBody = body
   GetData()
 }
 
+//分页
 const changePage = function () {
   GetData()
 }
 
+//排序
+const orderby = ref({ prop: "createDate", order: "desc" })
 const sortChange = (data: { column: any, prop: string, order: any }) => {
-
   orderby.value = { prop: data.prop, order: data.order }
   GetData()
 
 }
 
+//编辑回调
+const editCallBack = () => {
+
+  GetData()
+
+}
+
+//获取数据
 const GetData = () => {
 
-  httpRequest.post("http://localhost:5198/SystemUser", {
+  httpRequest.get(tableConfig.getUrl, {
     currentPage: childPagination.value.pagination.currentPage,
     pageSize: childPagination.value.pagination.pageSize,
-    OrderProp: orderby.value.prop,
-    Orderby: orderby.value.order,
-    searchList: searchList
-
+    orderProp: orderby.value.prop,
+    orderby: orderby.value.order,
+    searchBody: JSON.stringify(searchBody),
   }).then(function (response) {
     if (response.data.isSuccess) {
+
       const data = response.data.data.data
       const total = response.data.data.total
 
+     // alert(data[0].email)
       tableData.value = data
       childPagination.value.dataLoad(total)
+
     }
   });
 

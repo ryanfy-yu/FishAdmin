@@ -2,8 +2,8 @@ const columns = [
     { prop: "id", label: "ID", editable: false, index: 1, queryable: false, formField: "input", required: false },
     { prop: "username", label: "用户名", editable: true, sortable: true, index: 2, queryable: true, formField: "input", required: true },
     { prop: "email", label: "邮箱", editable: true, sortable: true, index: 3, queryable: true, formField: "input", required: true },
-    { prop: "phoneNumber", label: "电话号码", editable: true, sortable: true, index: 4, queryable: true, formField: "input", required: false },
-    { prop: "password", label: "密码", editable: true, sortable: true, index: 5, queryable: false, formField: "input", required: false },
+    { prop: "phoneNumber", label: "电话号码", editable: true, sortable: true, index: 4, queryable: true, formField: "input", required: true },
+    { prop: "password", label: "密码", editable: true, sortable: true, index: 5, queryable: false, formField: "input", required: true },
     { prop: "userType", label: "类型", editable: true, sortable: true, index: 6, queryable: true, formField: "input" },
     { prop: "imageUrl", label: "imageUrl", editable: true, sortable: true, index: 7, queryable: false, formField: "input", required: false },
     { prop: "createDate", label: "创建时间", editable: false, sortable: true, index: 8, queryable: false, formField: "input", required: false },
@@ -15,7 +15,11 @@ const columns = [
 
 const opConfig = {
     Selection: true,
-    Operations: true
+    Operations: true,
+    getUrl:"http://localhost:5198/SystemUser",
+    addUrl:"http://localhost:5198/SystemUser",
+    editUrl:"http://localhost:5198/SystemUser",
+    delUrl:"http://localhost:5198/SystemUser"
 }
 
 export { columns, opConfig }

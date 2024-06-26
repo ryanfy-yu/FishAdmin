@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="isShow" size="50%" title="详情">
+  <el-drawer v-model="isShow" size="50%" :show-close="false" title="详情">
     <el-descriptions :column="1" border>
 
       <el-descriptions-item v-for="item in detail" :label="item.label">{{ item.value }}</el-descriptions-item>

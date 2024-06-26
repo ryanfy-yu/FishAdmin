@@ -55,17 +55,12 @@ const checkLogined = () => {
         router.push("/login")
       }
     })
-    .catch(function (error) {
-      // 处理错误情况
-      ElMessage.error(error)
-      console.log(error);
-    });
 }
 
 
 
 const dataLoad = () => {
-  checkLogined()
+  //checkLogined()
   const homeMenusStore = useHomeMenusStore()
   homeMenusStore.menuList = [
     {

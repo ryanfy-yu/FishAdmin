@@ -67,6 +67,14 @@ namespace FishManagementSystem.SSO.Controllers
                 };
             }
 
+
+            //更新登录时间
+
+            tData.LastLoginTime = DateTime.Now;
+            var result = _dataService.Update<TSystemUsers>(tData);
+
+
+
             string accessToken = _jwtToken.CreateToken(TokenType.Access, tData.Username);
             string refreshToken = _jwtToken.CreateToken(TokenType.Refresh, tData.Username);
             return new ApiResult()
