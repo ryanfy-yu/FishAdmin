@@ -32,11 +32,11 @@ const httpRequest = {
         }
         return axiosExt(config)
     },
-    delete(url: string, data: object) {
+    delete(url: string, params: object) {
         const config = {
-            method: 'post',
+            method: 'delete',
             url: url,
-            data: data
+            params: params
         }
         return axiosExt(config)
     },

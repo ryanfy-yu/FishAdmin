@@ -104,7 +104,7 @@ namespace FishManagementSystem.BusinessService
         public bool Delete<T>(string id) where T : IModel, new()
         {
 
-            return _db.Updateable<T>().SetColumns(o => o.IsDeleted == true, o => o.UpdateDate == DateTime.Now).Where(o => o.Id == id).ExecuteCommand() > 0;
+            return _db.Updateable<T>().SetColumns(o => new T { IsDeleted = true, UpdateDate = DateTime.Now }).Where(o => o.Id == id).ExecuteCommand() > 0;
 
         }
 
@@ -121,7 +121,7 @@ namespace FishManagementSystem.BusinessService
         public int Delete<T>(List<string> ids) where T : IModel, new()
         {
 
-            return _db.Updateable<T>().SetColumns(o => o.IsDeleted == true, o => o.UpdateDate == DateTime.Now).Where(o => ids.Contains(o.Id)).ExecuteCommand();
+            return _db.Updateable<T>().SetColumns(o => new T { IsDeleted = true, UpdateDate = DateTime.Now }).Where(o => ids.Contains(o.Id)).ExecuteCommand();
         }
 
 

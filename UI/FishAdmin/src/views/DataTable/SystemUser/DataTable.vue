@@ -14,12 +14,20 @@
 
 
     <div class="table-button" style="padding: 15px;">
-      <TableButtons />
+      <!-- <TableButtons /> -->
+
+      <el-button type="primary" @click="clickAdd">
+        Add
+      </el-button>
+
+
+
+
     </div>
     <el-scrollbar style="height: 100%;">
       <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
 
-        <el-table-column v-if="tableConfig.Selection" type="selection" width="40" />
+        <!-- <el-table-column v-if="tableConfig.Selection" type="selection" width="40" /> -->
         <el-table-column v-for="item in tableColumn" :prop="item.prop" :label="item.label" sortable="custom" />
 
         <el-table-column fixed="right" label="操作" width="150" v-if="tableConfig.Operations">
@@ -46,19 +54,21 @@
   </div>
   <DetailView ref="childDetail"></DetailView>
   <EditView ref="childEdit" @callback="editCallBack"></EditView>
+  <AddView ref="childAdd" @callback="editCallBack"></AddView>
 </template>
 
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import DataSearch from '@/views/DataTable/SystemUser/DataSearch.vue'
-import TableButtons from '@/components/DataTable/TableButtons.vue'
+//import TableButtons from '@/components/DataTable/TableButtons.vue'
 import DetailView from '@/views/DataTable/SystemUser/DetailView.vue'
 import EditView from '@/views/DataTable/SystemUser/EditView.vue'
+import AddView from '@/views/DataTable/SystemUser/AddView.vue'
 import TablePagination from '@/views/DataTable/SystemUser/PaginationView.vue'
 import httpRequest from '@/scripts/httpRequest'
 import { columns, opConfig } from "@/scripts/tableConfig/systemUser"
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 //数据对象
 const tableData = ref([])
@@ -71,6 +81,7 @@ const tableConfig = opConfig
 
 //组件实例
 const childDetail = ref()
+const childAdd = ref()
 const childEdit = ref()
 const childSearch = ref()
 const childPagination = ref()
@@ -84,8 +95,40 @@ const handleClick = function (opType: string, index: number, row: object) {
     case "Edit":
       childEdit.value.dataLoad(row, tableColumn, tableConfig)
       break;
+    case "Delete":
+      deleteItem(row)
+      break;
     default: break;
   }
+}
+
+const clickAdd = () => {
+
+  childAdd.value.dataLoad(null, tableColumn, tableConfig)
+
+}
+
+//删除
+const deleteItem = (row: any) => {
+
+  ElMessageBox.confirm('确定删除？')
+    .then(() => {
+      httpRequest.delete(tableConfig.delUrl, { id: row.id }).then(function (response) {
+        if (response.data.isSuccess) {
+          ElMessage({
+            message: "删除成功！",
+            type: 'success',
+          })
+          GetData()
+        } else {
+          ElMessage({
+            message: "保删除失败！原因：" + response.data.error,
+            type: 'error',
+          })
+        }
+      })
+
+    })
 }
 
 //查询
@@ -130,12 +173,12 @@ const GetData = () => {
       const data = response.data.data.data
       const total = response.data.data.total
 
-     // alert(data[0].email)
+      // alert(data[0].email)
       tableData.value = data
       childPagination.value.dataLoad(total)
 
     }
-  });
+  })
 
 }
 

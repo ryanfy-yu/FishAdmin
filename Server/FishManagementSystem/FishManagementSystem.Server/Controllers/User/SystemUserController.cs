@@ -99,12 +99,25 @@ namespace FishManagementSystem.Server.Controllers.User
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
         public ApiResult Post(Dictionary<string, object> dto)
         {
-            _dataService.Add<TSystemUsers>(dto);
-            return new ApiResult()
-            {
-                IsSuccess = true,
+            var result = _dataService.Add<TSystemUsers>(dto);
 
-            };
+            if (result)
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = true,
+
+                };
+            }
+            else
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = false,
+
+                };
+
+            }
 
         }
 
@@ -117,6 +130,38 @@ namespace FishManagementSystem.Server.Controllers.User
         public ApiResult Put(Dictionary<string, object> dto)
         {
             var result = _dataService.Update<TSystemUsers>(dto);
+
+            if (result)
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = true,
+
+                };
+            }
+            else
+            {
+                return new ApiResult()
+                {
+                    IsSuccess = false,
+
+                };
+
+            }
+
+        }
+
+
+        /// <summary>
+        /// 刪除数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
+        public ApiResult Delete(string id)
+        {
+            var result = _dataService.Delete<TSystemUsers>(id);
+
 
             if (result)
             {

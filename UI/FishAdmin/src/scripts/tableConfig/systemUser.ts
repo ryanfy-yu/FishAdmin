@@ -10,16 +10,17 @@ const columns = [
     { prop: "updateDate", label: "最近更新时间", editable: false, sortable: true, index: 9, queryable: false, formField: "input", required: false },
     { prop: "lastLoginTime", label: "最近登录时间", editable: false, sortable: true, index: 10, queryable: false, formField: "input", required: false },
     { prop: "status", label: "状态", editable: true, sortable: true, index: 11, queryable: true, formField: "input", required: false },
-    { prop: "isDeleted", label: "是否删除", editable: true, sortable: false, index: 12, queryable: false, formField: "input", required: false }
+    { prop: "isDeleted", label: "是否删除", editable: false, sortable: false, index: 12, queryable: false, formField: "input", required: false }
 ]
 
 const opConfig = {
     Selection: true,
     Operations: true,
     getUrl:"http://localhost:5198/SystemUser",
-    addUrl:"http://localhost:5198/SystemUser",
-    editUrl:"http://localhost:5198/SystemUser",
-    delUrl:"http://localhost:5198/SystemUser"
+    postUrl:"http://localhost:5198/SystemUser",
+    putUrl:"http://localhost:5198/SystemUser",
+    delUrl:"http://localhost:5198/SystemUser",
+
 }
 
 export { columns, opConfig }

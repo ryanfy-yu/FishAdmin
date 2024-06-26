@@ -33,13 +33,12 @@ const dataLoad = function (item: any, tableColumn: Array<any>, config: any) {
 
 
     isShow.value = true
-    let list = []
-    for (const key in item) {
+    let list: Array<any> = []
 
-        const column = tableColumn.find(o => o.prop == key)
-        if (column) list.push({ prop: column.prop, editable: column.editable, required: column.required, label: column.label, value: item[key], formField: column.formField, index: column.index })
+    tableColumn.forEach(o => {
+        list.push({ prop: o.prop, editable: o.editable, required: o.required, label: o.label, value: "", formField: o.formField, index: o.index })
 
-    }
+    })
     detail.value = list.sort((a, b) => a.index - b.index)
 
 }
@@ -55,7 +54,7 @@ const saveData = () => {
     detail.value.forEach(item => {
         data[item.prop] = item.value
     });
-    httpRequest.put(_config.putUrl, data
+    httpRequest.post(_config.postUrl, data
 
     ).then(function (response) {
         if (response.data.isSuccess) {
@@ -76,7 +75,7 @@ const saveData = () => {
 
 
 const submitForm = () => {
-    ElMessageBox.confirm(`确定提交修改？`)
+    ElMessageBox.confirm(`确定提交？`)
         .then(() => {
             saveData()
 
