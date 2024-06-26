@@ -119,7 +119,11 @@ const deleteItem = (row: any) => {
             message: "删除成功！",
             type: 'success',
           })
+
+
           GetData()
+
+
         } else {
           ElMessage({
             message: "保删除失败！原因：" + response.data.error,
@@ -160,25 +164,38 @@ const editCallBack = () => {
 
 //获取数据
 const GetData = () => {
-
-  httpRequest.get(tableConfig.getUrl, {
-    currentPage: childPagination.value.pagination.currentPage,
-    pageSize: childPagination.value.pagination.pageSize,
-    orderProp: orderby.value.prop,
-    orderby: orderby.value.order,
-    searchBody: JSON.stringify(searchBody),
-  }).then(function (response) {
-    if (response.data.isSuccess) {
-
-      const data = response.data.data.data
-      const total = response.data.data.total
-
-      // alert(data[0].email)
-      tableData.value = data
-      childPagination.value.dataLoad(total)
-
-    }
+  ElMessage({
+    message: "刷新列表中..."
   })
+  setTimeout(() => {
+
+    httpRequest.get(tableConfig.getUrl, {
+      currentPage: childPagination.value.pagination.currentPage,
+      pageSize: childPagination.value.pagination.pageSize,
+      orderProp: orderby.value.prop,
+      orderby: orderby.value.order,
+      searchBody: JSON.stringify(searchBody),
+    }).then(function (response) {
+      if (response.data.isSuccess) {
+
+        const data = response.data.data.data
+        const total = response.data.data.total
+
+        // alert(data[0].email)
+        tableData.value = data
+        childPagination.value.dataLoad(total)
+
+        ElMessage({
+          message: "刷新成功！",
+          type: 'success',
+        })
+
+      }
+    })
+  }, 3000);
+
+
+
 
 }
 
