@@ -2,16 +2,20 @@
   <el-drawer v-model="isShow" size="50%" :show-close="false" title="详情">
     <el-descriptions :column="1" border>
 
-      <el-descriptions-item v-for="item in detail" :label="item.label">{{ item.value }}</el-descriptions-item>
+      <template v-for="item in detail">
+        <el-descriptions-item v-if="item.formField == 'select'" :label="item.label">
+          {{ columnFormat(item) }}
+        </el-descriptions-item>
+        <el-descriptions-item v-else :label="item.label">{{ item.value }}</el-descriptions-item>
 
-
+      </template>
     </el-descriptions>
   </el-drawer>
 </template>
 
 <script lang="ts" setup>
-
 import { ref, watch } from 'vue'
+import { useSelectionStore } from '@/stores/selection'
 
 
 //const props = defineProps({ data: Object })
@@ -19,16 +23,26 @@ import { ref, watch } from 'vue'
 const detail = ref<any>([])
 const isShow = ref(false)
 
+const selectionStore = useSelectionStore()
+const columnFormat = (item) => {
 
-const dataLoad = function (item: any, tableColumn: Array<any>) {
+  const text = selectionStore.GetSelectionText(item.selectOrigin, item.value)
+
+  if (text) return text
+  return item.value
+
+}
+
+
+const dataLoad = function (item: any, tableConfig: any) {
   isShow.value = true
   let list = []
   for (const key in item) {
 
-    const column = tableColumn.find(o => o.prop == key)
+    const column = tableConfig.columns.find(o => o.prop == key)
 
-    if(column){
-      list.push({ label: column.label, value: item[key], index: column.index })
+    if (column) {
+      list.push({ label: column.label, value: item[key], index: column.index, selectOrigin: column.selectOrigin, formField: column.formField })
     }
   }
   detail.value = list.sort((a, b) => a.index - b.index)

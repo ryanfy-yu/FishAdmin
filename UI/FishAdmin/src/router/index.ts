@@ -22,6 +22,14 @@ const router = createRouter({
           component: () => import('@/views/DataTable/SystemMenu/DataTable.vue')
         },
         {
+          path: '/datalist/systemrole',
+          component: () => import('@/views/DataTable/SystemRole/DataTable.vue')
+        },
+        {
+          path: '/datalist/dictionaries',
+          component: () => import('@/views/DataTable/Dictionaries/DataTable.vue')
+        },
+        {
           path: '/home',
           component: () => import('@/views/HomeView.vue')
         },

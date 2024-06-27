@@ -86,22 +86,34 @@ const dataLoad = () => {
           title: '菜单管理',
           icon: 'Document',
           path: '/datalist/systemmenu',
+        },
+        {
+          index: '4',
+          title: '角色管理',
+          icon: 'Document',
+          path: '/datalist/systemrole',
+        },
+        {
+          index: '5',
+          title: '字典表',
+          icon: 'Document',
+          path: '/datalist/dictionaries',
         }
       ]
     },
     {
-      index: "4",
+      index: "5",
       title: '事物管理',
       icon: 'search',
       children: [
         {
-          index: '5',
+          index: '6',
           title: '物件管理',
           icon: 'Document',
           path: '/caaaaase_manage',
         },
         {
-          index: '6',
+          index: '7',
           title: '物件研判',
           icon: 'Document',
           path: '/datalist',
@@ -109,7 +121,7 @@ const dataLoad = () => {
       ]
     },
     {
-      index: "7",
+      index: "8",
       title: '一键搜',
       icon: 'Document',
       path: '/search',

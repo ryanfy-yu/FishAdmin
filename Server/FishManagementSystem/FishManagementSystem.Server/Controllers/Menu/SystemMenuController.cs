@@ -15,7 +15,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace FishManagementSystem.Server.Controllers.User
+namespace FishManagementSystem.Server.Controllers.Menu
 {
     /// <summary>
     /// 系统用户
@@ -76,7 +76,7 @@ namespace FishManagementSystem.Server.Controllers.User
 
                 return new ApiResult()
                 {
-                    Data = new { data = data, total = total, totalPages = totalPages },
+                    Data = new { data, total, totalPages },
                     IsSuccess = true,
                 };
             }

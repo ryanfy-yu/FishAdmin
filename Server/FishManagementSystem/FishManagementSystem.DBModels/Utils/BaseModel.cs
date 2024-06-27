@@ -23,7 +23,7 @@ namespace FishManagementSystem.DBModels.Utils
         [SugarColumn(DefaultValue = "NOW()", IsOnlyIgnoreInsert = true)]
         public DateTime UpdateDate { get; set; }
 
-        [SugarColumn(DefaultValue = "")]
+        [SugarColumn(DefaultValue = "1")]
         public virtual bool IsDeleted { get; set; }
 
     }

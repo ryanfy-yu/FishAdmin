@@ -14,7 +14,7 @@
 
 
     <div class="table-button" style="padding: 15px;">
-      <el-button type="primary" @click="clickAdd"> Add </el-button>
+      <el-button type="primary" @click="clickAdd"> 添加 </el-button>
     </div>
 
     <el-scrollbar style="height: 100%;">
@@ -22,7 +22,14 @@
 
         <!-- <el-table-column v-if="tableConfig.Selection" type="selection" width="40" /> -->
         <el-table-column type="index" width="40" />
-        <el-table-column v-for="item in tableColumn" :prop="item.prop" :label="item.label" sortable="custom" />
+
+        <template v-for="item in tableConfig.columns">
+          <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
+            :label="item.label" sortable="custom" />
+          <el-table-column v-else :prop="item.prop" :label="item.label" sortable="custom" />
+
+        </template>
+
 
         <el-table-column fixed="right" label="操作" width="150" v-if="tableConfig.Operations">
           <template #default="scope">
@@ -63,18 +70,28 @@ import AddView from '@/components/DataTable/AddView.vue'
 import TablePagination from '@/components/DataTable/PaginationView.vue'
 
 //表配置，需要更換
-import { columns, opConfig } from "@/scripts/tableConfig/systemMenu"
+import { tableConfig } from "@/scripts/tableConfig/systemMenu"
 
 import httpRequest from '@/scripts/httpRequest'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useSelectionStore } from '@/stores/selection'
 
 //数据对象
 const tableData = ref([])
 
+//选项源
+const selection = useSelectionStore()
+const columnFormat = (row: any, column: any, cellValue: any, index: number) => {
+  const columnConfig = tableConfig.columns.find(o => o.prop == column.property)
+  if (columnConfig) {
+    const text = selection.GetSelectionText(columnConfig.selectOrigin, cellValue)
 
-//表配置
-const tableColumn = columns
-const tableConfig = opConfig
+    if (text) return text
+  }
+  return cellValue
+
+}
+
 
 
 //组件实例
@@ -88,10 +105,10 @@ const childPagination = ref()
 const handleClick = function (opType: string, index: number, row: object) {
   switch (opType) {
     case "Detail":
-      childDetail.value.dataLoad(row, tableColumn)
+      childDetail.value.dataLoad(row, tableConfig)
       break;
     case "Edit":
-      childEdit.value.dataLoad(row, tableColumn, tableConfig)
+      childEdit.value.dataLoad(row, tableConfig)
       break;
     case "Delete":
       deleteItem(row)
@@ -100,13 +117,12 @@ const handleClick = function (opType: string, index: number, row: object) {
   }
 }
 
+//点击添加按钮
 const clickAdd = () => {
-
-  childAdd.value.dataLoad(null, tableColumn, tableConfig)
-
+  childAdd.value.dataLoad(null, tableConfig)
 }
 
-//删除
+//删除按钮
 const deleteItem = (row: any) => {
 
   ElMessageBox.confirm('确定删除？')
@@ -162,9 +178,7 @@ const editCallBack = () => {
 
 //获取数据
 const GetData = () => {
-  ElMessage({
-    message: "刷新列表中..."
-  })
+
   setTimeout(() => {
 
     httpRequest.get(tableConfig.getUrl, {
@@ -184,13 +198,13 @@ const GetData = () => {
         childPagination.value.dataLoad(total)
 
         ElMessage({
-          message: "刷新成功！",
+          message: "刷新列表",
           type: 'success',
         })
 
       }
     })
-  }, 3000);
+  }, 1000);
 
 
 
@@ -198,7 +212,8 @@ const GetData = () => {
 }
 
 onMounted(() => {
-  childSearch.value.dataLoad(tableColumn)
+  childSearch.value.dataLoad(tableConfig)
+  selection.init()
   GetData()
 })
 

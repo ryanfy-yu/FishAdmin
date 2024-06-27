@@ -14,8 +14,9 @@
 
 
     <div class="table-button" style="padding: 15px;">
-      <el-button type="primary" @click="clickAdd">添加 </el-button>
+      <el-button type="primary" @click="clickAdd"> 添加 </el-button>
     </div>
+
     <el-scrollbar style="height: 100%;">
       <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
 
@@ -53,20 +54,18 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-// import DataSearch from '@/views/DataTable/SystemUser/DataSearch.vue'
-// import DetailView from '@/views/DataTable/SystemUser/DetailView.vue'
-// import EditView from '@/views/DataTable/SystemUser/EditView.vue'
-// import AddView from '@/views/DataTable/SystemUser/AddView.vue'
-// import TablePagination from '@/views/DataTable/SystemUser/PaginationView.vue'
 
+//本地子組件
 import DataSearch from '@/components/DataTable/DataSearch.vue'
 import DetailView from '@/components/DataTable/DetailView.vue'
 import EditView from '@/components/DataTable/EditView.vue'
 import AddView from '@/components/DataTable/AddView.vue'
 import TablePagination from '@/components/DataTable/PaginationView.vue'
 
+//表配置，需要更換
+import { tableConfig} from "@/scripts/tableConfig/systemRole"
+
 import httpRequest from '@/scripts/httpRequest'
-import { tableConfig } from "@/scripts/tableConfig/systemUser"
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 //数据对象
@@ -76,7 +75,7 @@ const tableData = ref([])
 //表配置
 // const tableColumn = columns
 // const tableConfig = opConfig
-
+// const tableOptionConfig = optionsConfig
 
 //组件实例
 const childDetail = ref()
@@ -92,7 +91,7 @@ const handleClick = function (opType: string, index: number, row: object) {
       childDetail.value.dataLoad(row, tableConfig)
       break;
     case "Edit":
-      childEdit.value.dataLoad(row, tableConfig)
+      childEdit.value.dataLoad(row, tableConfig, tableConfig)
       break;
     case "Delete":
       deleteItem(row)
@@ -163,7 +162,7 @@ const editCallBack = () => {
 
 //获取数据
 const GetData = () => {
- 
+
   setTimeout(() => {
 
     httpRequest.get(tableConfig.getUrl, {

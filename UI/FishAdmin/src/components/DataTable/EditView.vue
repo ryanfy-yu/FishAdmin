@@ -2,7 +2,18 @@
     <el-drawer v-model="isShow" size="50%" title="编辑" direction="ltr" :before-close="handleClose">
         <el-form label-width="auto">
             <template v-for="item in detail">
-                <el-form-item v-if="item.formField == 'input'" :label="item.label" :prop="item.prop">
+
+                <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
+                    <el-select v-model="item.value" placeholder="未选择" :disabled="!item.editable">
+                        <el-option v-for="o in getOptions(item)" :label="o.label" :value="o.value" />
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item v-else-if="item.formField == 'number'" :label="item.label" :prop="item.prop">
+                    <el-input type="number" v-model="item.value" :disabled="!item.editable" />
+                </el-form-item>
+
+                <el-form-item v-else :label="item.label" :prop="item.prop">
                     <el-input v-model="item.value" :disabled="!item.editable" />
                 </el-form-item>
             </template>
@@ -18,26 +29,37 @@
 import { ref } from 'vue'
 import { ElDrawer, ElMessageBox, ElMessage } from 'element-plus'
 import httpRequest from '@/scripts/httpRequest'
+import { useSelectionStore } from '@/stores/selection'
 
 const detail = ref<Array<any>>([])
 const isShow = ref(false)
 
 let _item: any = {}
-let _tableColumn: Array<any> = []
-let _config: any = {}
+// let _tableColumn: Array<any> = []
+let _tableConfig: any = {}
 
-const dataLoad = function (item: any, tableColumn: Array<any>, config: any) {
+const selectionStore = useSelectionStore()
+const getOptions = (item) => {
+
+    const list = selectionStore.GetSelectionOptions(item.selectOrigin)
+
+    if (list) return list
+    return []
+
+}
+
+const dataLoad = function (item: any, tableConfig: any) {
     _item = item
-    _tableColumn = tableColumn
-    _config = config
 
+    _tableConfig = tableConfig
 
     isShow.value = true
     let list = []
     for (const key in item) {
 
-        const column = tableColumn.find(o => o.prop == key)
-        if (column) list.push({ prop: column.prop, editable: column.editable, required: column.required, label: column.label, value: item[key], formField: column.formField, index: column.index })
+        const column = tableConfig.columns.find(o => o.prop == key)
+        const val = item[key].toString()
+        if (column) list.push({ prop: column.prop, editable: column.editable, required: column.required, label: column.label, value: val, formField: column.formField, selectOrigin: column.selectOrigin, index: column.index })
 
     }
     detail.value = list.sort((a, b) => a.index - b.index)
@@ -45,7 +67,6 @@ const dataLoad = function (item: any, tableColumn: Array<any>, config: any) {
 }
 
 const handleClose = (done: Function) => {
-    emits("callback")
     done()
 }
 
@@ -55,7 +76,9 @@ const saveData = () => {
     detail.value.forEach(item => {
         data[item.prop] = item.value
     });
-    httpRequest.put(_config.putUrl, data
+
+
+    httpRequest.put(_tableConfig.putUrl, data
 
     ).then(function (response) {
         if (response.data.isSuccess) {
@@ -79,6 +102,10 @@ const submitForm = () => {
     ElMessageBox.confirm(`确定提交修改？`)
         .then(() => {
             saveData()
+            setTimeout(() => {
+                emits("callback")
+            }, 3000);
+
 
         })
 }
@@ -87,7 +114,7 @@ const resetForm = () => {
 
     ElMessageBox.confirm(`确定重置？`)
         .then(() => {
-            dataLoad(_item, _tableColumn, _config)
+            dataLoad(_item, _tableConfig)
 
         })
 }

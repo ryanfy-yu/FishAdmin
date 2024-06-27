@@ -13,14 +13,15 @@ const columns = [
     { prop: "isDeleted", label: "是否删除", editable: false, sortable: false, index: 12, queryable: false, formField: "input", required: false }
 ]
 
-const opConfig = {
+const tableConfig = {
+    columns: columns,
     Selection: true,
     Operations: true,
-    getUrl:"http://localhost:5198/SystemUser",
-    postUrl:"http://localhost:5198/SystemUser",
-    putUrl:"http://localhost:5198/SystemUser",
-    delUrl:"http://localhost:5198/SystemUser",
+    getUrl: "http://localhost:5198/SystemUser",
+    postUrl: "http://localhost:5198/SystemUser",
+    putUrl: "http://localhost:5198/SystemUser",
+    delUrl: "http://localhost:5198/SystemUser",
 
 }
 
-export { columns, opConfig }
+export { tableConfig }

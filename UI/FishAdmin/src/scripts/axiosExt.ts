@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useUserInfoStore } from '@/stores/userInfo';
+import { ElMessage } from 'element-plus'
 
 const axioxExt = axios.create({
   // baseURL: "http://192.168.211.137:9080", // base地址
@@ -50,7 +51,10 @@ axioxExt.interceptors.response.use(function (response) {
             return axioxExt(error.config)
           }
         }).catch(function (error) {
-
+          ElMessage({
+            message: "请重新登陆系统",
+            type: 'error',
+          })
           return Promise.reject(error);
         })
       }

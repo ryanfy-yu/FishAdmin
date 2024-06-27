@@ -5,6 +5,7 @@ using FishManagementSystem.IBussinessService;
 using FishManagementSystem.IDBModels;
 using Microsoft.Extensions.Configuration;
 using SqlSugar;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -89,9 +90,15 @@ namespace FishManagementSystem.BusinessService
         public bool Add<T>(Dictionary<string, object> model) where T : IModel, new()
         {
 
-            model.Add("CreateDate", DateTime.Now);
-            model.Add("IsDeleted", false);
-            return _db.Insertable<T>(model).ExecuteCommand() > 0;
+            var dic = new Dictionary<string, object>();
+            foreach (var key in model.Keys)
+            {
+                dic.Add(key.ToLower(), model[key]);
+            }
+            dic["CreateDate".ToLower()] = DateTime.Now;
+            dic["IsDeleted".ToLower()] = false;
+
+            return _db.Insertable<T>(dic).ExecuteCommand() > 0;
         }
 
         public int Add<T>(List<Dictionary<string, object>> list) where T : IModel, new()
