@@ -2,20 +2,25 @@
     <el-drawer v-model="isShow" size="50%" title="编辑" direction="ltr" :before-close="handleClose">
         <el-form label-width="auto">
             <template v-for="item in detail">
+                <template v-if="!item.hidden">
 
-                <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
-                    <el-select v-model="item.value" placeholder="未选择" :disabled="!item.editable">
-                        <el-option v-for="o in getOptions(item)" :label="o.label" :value="o.value" />
-                    </el-select>
-                </el-form-item>
 
-                <el-form-item v-else-if="item.formField == 'number'" :label="item.label" :prop="item.prop">
-                    <el-input type="number" v-model="item.value" :disabled="!item.editable" />
-                </el-form-item>
+                    <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
+                        <el-select v-model="item.value" placeholder="未选择" :disabled="!item.editable">
+                            <el-option v-for="o in getOptions(item)" :label="o.label" :value="o.value" />
+                        </el-select>
+                    </el-form-item>
 
-                <el-form-item v-else :label="item.label" :prop="item.prop">
-                    <el-input v-model="item.value" :disabled="!item.editable" />
-                </el-form-item>
+                    <el-form-item v-else-if="item.formField == 'number'" :label="item.label" :prop="item.prop">
+                        <el-input type="number" v-model="item.value" :disabled="!item.editable" />
+                    </el-form-item>
+
+                    <el-form-item v-else :label="item.label" :prop="item.prop">
+                        <el-input v-model="item.value" :disabled="!item.editable" />
+                    </el-form-item>
+                </template>
+
+
             </template>
             <el-form-item>
                 <el-button @click="resetForm()">重置</el-button>
@@ -50,7 +55,7 @@ const getOptions = (item) => {
 
 const dataLoad = function (item: any, tableConfig: any) {
     _item = item
-  
+
     _tableConfig = tableConfig
 
     isShow.value = true

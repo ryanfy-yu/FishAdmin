@@ -20,9 +20,15 @@
     <el-scrollbar style="height: 100%;">
       <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
 
-        <!-- <el-table-column v-if="tableConfig.Selection" type="selection" width="40" /> -->
         <el-table-column type="index" width="40" />
-        <el-table-column v-for="item in tableConfig.columns" :prop="item.prop" :label="item.label" sortable="custom" />
+
+        <template v-for="item in tableConfig.columns">
+          <template v-if="!item.hidden">
+            <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
+              :label="item.label" sortable="custom" />
+            <el-table-column v-else :prop="item.prop" :label="item.label" sortable="custom" />
+          </template>
+        </template>
 
         <el-table-column fixed="right" label="操作" width="150" v-if="tableConfig.Operations">
           <template #default="scope">
@@ -63,19 +69,28 @@ import AddView from '@/components/DataTable/AddView.vue'
 import TablePagination from '@/components/DataTable/PaginationView.vue'
 
 //表配置，需要更換
-import { tableConfig} from "@/scripts/tableConfig/systemRole"
+import { tableConfig } from "@/scripts/tableConfig/systemRole"
 
 import httpRequest from '@/scripts/httpRequest'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useSelectionStore } from '@/stores/selection'
 
 //数据对象
 const tableData = ref([])
 
 
-//表配置
-// const tableColumn = columns
-// const tableConfig = opConfig
-// const tableOptionConfig = optionsConfig
+//选项源
+const selection = useSelectionStore()
+const columnFormat = (row: any, column: any, cellValue: any, index: number) => {
+  const columnConfig = tableConfig.columns.find(o => o.prop == column.property)
+  if (columnConfig) {
+    const text = selection.GetSelectionText(columnConfig.selectOrigin, cellValue)
+
+    if (text) return text
+  }
+  return cellValue
+
+}
 
 //组件实例
 const childDetail = ref()

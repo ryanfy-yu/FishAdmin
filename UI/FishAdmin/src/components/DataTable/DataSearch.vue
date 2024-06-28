@@ -3,13 +3,22 @@
 
     <template v-for="item in searchList">
 
+
       <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
-        <el-select v-model="item.value" placeholder="未选择" style="width: 200px">
+        <el-select v-model="item.value" placeholder="未选择" style="width: 195px">
           <el-option v-for="o in getOptions(item)" :label="o.label" :value="o.value" />
         </el-select>
       </el-form-item>
 
-      <el-form-item v-else :label="item.label">
+      <el-form-item v-else-if="item.formField == 'datetime'" :label="item.label">
+        <!-- <el-date-picker v-model="item.value" type="daterange" range-separator="-" value-format="YYYY/MM/DD HH:mm"
+          :default-time="defaultTime" /> -->
+
+        <el-date-picker v-model="item.value" type="datetimerange" :default-time="defaultTime"
+          value-format="YYYY-MM-DD HH:mm" time-format="HH:mm" format="YYYY-MM-DD HH:mm"/>
+      </el-form-item>
+
+      <el-form-item v-else :label="item.label" :prop="item.prop">
         <el-input v-model="item.value" />
       </el-form-item>
 
@@ -26,6 +35,17 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useSelectionStore } from '@/stores/selection'
+
+
+
+const defaultTime = ref<[Date, Date]>([
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59),
+])
+
+
+
+
 
 const searchList = ref<Array<any>>([])
 
@@ -67,7 +87,6 @@ const onSubmit = () => {
   let searchBody: obj = {}
   searchList.value.forEach(o => {
     if (o.value != "") {
-
       searchBody[o.prop] = o.value
     }
   })

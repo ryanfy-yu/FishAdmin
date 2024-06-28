@@ -14,14 +14,21 @@
 
 
     <div class="table-button" style="padding: 15px;">
-      <el-button type="primary" @click="clickAdd">添加 </el-button>
+      <el-button type="primary" @click="clickAdd"> 添加 </el-button>
     </div>
+
     <el-scrollbar style="height: 100%;">
       <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
 
-        <!-- <el-table-column v-if="tableConfig.Selection" type="selection" width="40" /> -->
         <el-table-column type="index" width="40" />
-        <el-table-column v-for="item in tableConfig.columns" :prop="item.prop" :label="item.label" sortable="custom" />
+
+        <template v-for="item in tableConfig.columns">
+          <template v-if="!item.hidden">
+            <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
+              :label="item.label" sortable="custom" />
+            <el-table-column v-else :prop="item.prop" :label="item.label" sortable="custom" />
+          </template>
+        </template>
 
         <el-table-column fixed="right" label="操作" width="150" v-if="tableConfig.Operations">
           <template #default="scope">
@@ -53,30 +60,35 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-// import DataSearch from '@/views/DataTable/SystemUser/DataSearch.vue'
-// import DetailView from '@/views/DataTable/SystemUser/DetailView.vue'
-// import EditView from '@/views/DataTable/SystemUser/EditView.vue'
-// import AddView from '@/views/DataTable/SystemUser/AddView.vue'
-// import TablePagination from '@/views/DataTable/SystemUser/PaginationView.vue'
 
+//本地子組件
 import DataSearch from '@/components/DataTable/DataSearch.vue'
 import DetailView from '@/components/DataTable/DetailView.vue'
 import EditView from '@/components/DataTable/EditView.vue'
 import AddView from '@/components/DataTable/AddView.vue'
 import TablePagination from '@/components/DataTable/PaginationView.vue'
 
-import httpRequest from '@/scripts/httpRequest'
+//表配置，需要更換
 import { tableConfig } from "@/scripts/tableConfig/systemUser"
+
+import httpRequest from '@/scripts/httpRequest'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useSelectionStore } from '@/stores/selection'
 
 //数据对象
 const tableData = ref([])
 
+//选项源
+const selection = useSelectionStore()
+const columnFormat = (row: any, column: any, cellValue: any, index: number) => {
+  const columnConfig = tableConfig.columns.find(o => o.prop == column.property)
+  if (columnConfig) {
+    const text = selection.GetSelectionText(columnConfig.selectOrigin, cellValue)
 
-//表配置
-// const tableColumn = columns
-// const tableConfig = opConfig
-
+    if (text) return text
+  }
+  return cellValue
+}
 
 //组件实例
 const childDetail = ref()
@@ -101,13 +113,12 @@ const handleClick = function (opType: string, index: number, row: object) {
   }
 }
 
+//点击添加按钮
 const clickAdd = () => {
-
   childAdd.value.dataLoad(null, tableConfig)
-
 }
 
-//删除
+//删除按钮
 const deleteItem = (row: any) => {
 
   ElMessageBox.confirm('确定删除？')
@@ -163,7 +174,7 @@ const editCallBack = () => {
 
 //获取数据
 const GetData = () => {
- 
+
   setTimeout(() => {
 
     httpRequest.get(tableConfig.getUrl, {
@@ -198,6 +209,7 @@ const GetData = () => {
 
 onMounted(() => {
   childSearch.value.dataLoad(tableConfig)
+  selection.init()
   GetData()
 })
 

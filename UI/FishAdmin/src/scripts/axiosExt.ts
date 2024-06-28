@@ -32,7 +32,6 @@ axioxExt.interceptors.response.use(function (response) {
 }, function (error) {
 
   if (error.message == "Network Error" || (error.response && error.response.status == "401")) {
-
     try {
       const userInfo = useUserInfoStore();
       const refreshToken = userInfo.refreshToken

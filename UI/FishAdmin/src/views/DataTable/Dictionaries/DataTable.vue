@@ -20,9 +20,13 @@
     <el-scrollbar style="height: 100%;">
       <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
 
-        <!-- <el-table-column v-if="tableConfig.Selection" type="selection" width="40" /> -->
         <el-table-column type="index" width="40" />
-        <el-table-column v-for="item in tableConfig.columns" :prop="item.prop" :label="item.label" sortable="custom" />
+
+        <template v-for="item in tableConfig.columns">
+          <el-table-column v-if="!item.hidden" :prop="item.prop" :label="item.label" sortable="custom" />
+        </template>
+
+
 
         <el-table-column fixed="right" label="操作" width="150" v-if="tableConfig.Operations">
           <template #default="scope">

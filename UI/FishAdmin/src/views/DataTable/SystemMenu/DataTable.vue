@@ -18,18 +18,17 @@
     </div>
 
     <el-scrollbar style="height: 100%;">
-      <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
+      <el-table :data="tableData" row-key="id" stripe border max-height="500px" @sort-change="sortChange">
 
-        <!-- <el-table-column v-if="tableConfig.Selection" type="selection" width="40" /> -->
         <el-table-column type="index" width="40" />
 
         <template v-for="item in tableConfig.columns">
-          <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
-            :label="item.label" sortable="custom" />
-          <el-table-column v-else :prop="item.prop" :label="item.label" sortable="custom" />
-
+          <template v-if="!item.hidden">
+            <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
+              :label="item.label" sortable="custom" />
+            <el-table-column v-else :prop="item.prop" :label="item.label" sortable="custom" />
+          </template>
         </template>
-
 
         <el-table-column fixed="right" label="操作" width="150" v-if="tableConfig.Operations">
           <template #default="scope">
@@ -77,7 +76,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import { useSelectionStore } from '@/stores/selection'
 
 //数据对象
-const tableData = ref([])
+const tableData = ref<Array<any>>([])
 
 //选项源
 const selection = useSelectionStore()
@@ -89,10 +88,30 @@ const columnFormat = (row: any, column: any, cellValue: any, index: number) => {
     if (text) return text
   }
   return cellValue
-
 }
 
-
+//递归菜单
+const GetRecursionMenuList = (parentId: string, list: Array<any>) => {
+  if (parentId && parentId != "") {
+    const childList = list.filter(o => o.parentId == parentId)
+    childList.forEach(o => {
+      const arr = GetRecursionMenuList(o.id, list)
+      if (arr) {
+        o.children = arr;
+      }
+    })
+    return childList
+  } else {
+    const rootList = list.filter(o => o.parentId == undefined || o.parentId == "")
+    rootList.forEach(o => {
+      const childList = GetRecursionMenuList(o.id, list)
+      if (childList) {
+        o.children = childList
+      }
+    })
+    return rootList
+  }
+}
 
 //组件实例
 const childDetail = ref()
@@ -193,8 +212,10 @@ const GetData = () => {
         const data = response.data.data.data
         const total = response.data.data.total
 
+        const resultData = GetRecursionMenuList("", data)
+
         // alert(data[0].email)
-        tableData.value = data
+        tableData.value = resultData
         childPagination.value.dataLoad(total)
 
         ElMessage({

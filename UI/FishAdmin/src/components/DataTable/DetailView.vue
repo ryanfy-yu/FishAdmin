@@ -3,10 +3,16 @@
     <el-descriptions :column="1" border>
 
       <template v-for="item in detail">
-        <el-descriptions-item v-if="item.formField == 'select'" :label="item.label">
-          {{ columnFormat(item) }}
-        </el-descriptions-item>
-        <el-descriptions-item v-else :label="item.label">{{ item.value }}</el-descriptions-item>
+        <template v-if="!item.hidden">
+
+
+          <el-descriptions-item v-if="item.formField == 'select'" :label="item.label">
+            {{ columnFormat(item) }}
+          </el-descriptions-item>
+          <el-descriptions-item v-else :label="item.label">{{ item.value }}</el-descriptions-item>
+
+
+        </template>
 
       </template>
     </el-descriptions>

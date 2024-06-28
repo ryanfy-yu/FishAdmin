@@ -2,20 +2,30 @@
     <el-drawer v-model="isShow" size="50%" title="编辑" direction="ltr" :before-close="handleClose">
         <el-form label-width="auto">
             <template v-for="item in detail">
+                <template v-if="item.editable">
 
-                <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
-                    <el-select v-model="item.value" placeholder="未选择" :disabled="!item.editable">
-                        <el-option v-for="o in getOptions(item)" :label="o.label" :value="o.value" />
-                    </el-select>
-                </el-form-item>
+                    <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
+                        <el-select v-model="item.value" placeholder="未选择" :disabled="!item.editable">
+                            <el-option v-for="o in selectionStore.GetSelectionOptions(item.selectOrigin)"
+                                :label="o.label" :value="o.value" />
+                        </el-select>
+                    </el-form-item>
 
-                <el-form-item v-else-if="item.formField == 'number'" :label="item.label" :prop="item.prop">
-                    <el-input type="number" v-model="item.value" :disabled="!item.editable" />
-                </el-form-item>
+                    <el-form-item v-else-if="item.formField == 'cascader'" :label="item.label" :prop="item.prop">
 
-                <el-form-item v-else :label="item.label" :prop="item.prop">
-                    <el-input v-model="item.value" :disabled="!item.editable" />
-                </el-form-item>
+                        <el-cascader v-model="item.value" :disabled="!item.editable" :props="cascaderProps" clearable
+                            :options="selectionStore.GetCascaderOptions(item.selectOrigin)" />
+                    </el-form-item>
+
+                    <el-form-item v-else-if="item.formField == 'number'" :label="item.label" :prop="item.prop">
+                        <el-input type="number" v-model="item.value" :disabled="!item.editable" />
+                    </el-form-item>
+
+                    <el-form-item v-else :label="item.label" :prop="item.prop">
+                        <el-input v-model="item.value" :disabled="!item.editable" />
+                    </el-form-item>
+                </template>
+
             </template>
             <el-form-item>
                 <el-button @click="resetForm()">重置</el-button>
@@ -39,13 +49,15 @@ let _item: any = {}
 let _tableConfig: any = {}
 
 const selectionStore = useSelectionStore()
-const getOptions = (item) => {
+const cascaderOptions = (selectOrigin: string) => {
 
-    const list = selectionStore.GetSelectionOptions(item.selectOrigin)
-
+    const list = selectionStore.GetCascaderOptions(selectOrigin)
+    alert(JSON.stringify(list))
+    console.log(list)
     if (list) return list
-    return []
-
+}
+const cascaderProps = {
+    checkStrictly: true,
 }
 
 const dataLoad = function (item: any, tableConfig: any) {
@@ -54,14 +66,22 @@ const dataLoad = function (item: any, tableConfig: any) {
     _tableConfig = tableConfig
 
     isShow.value = true
-    let list = []
-    for (const key in item) {
+    let list: Array<any> = []
 
-        const column = tableConfig.columns.find(o => o.prop == key)
-        const val = item[key].toString()
-        if (column) list.push({ prop: column.prop, editable: column.editable, required: column.required, label: column.label, value: val, formField: column.formField, selectOrigin: column.selectOrigin, index: column.index })
+    tableConfig.columns.forEach(column => {
+        let entity: any = {}
+        for (const key in item) {
 
-    }
+            if (column.prop == key) {
+                entity = column
+                entity.value = item[key] ? item[key].toString() : ""
+
+                list.push(entity)
+            }
+
+        }
+    })
+
     detail.value = list.sort((a, b) => a.index - b.index)
 
 }

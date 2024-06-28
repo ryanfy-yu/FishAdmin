@@ -2,6 +2,9 @@
 {
     public class ReqPaginationDto
     {
+
+        public string ModuleId { get; set; }
+
         public int CurrentPage { get; set; }
 
         public int PageSize { get; set; }
