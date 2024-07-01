@@ -1,32 +1,26 @@
 <template>
   <div style="padding: 15px;">
 
-    <el-collapse>
-      <el-collapse-item>
-        <template #title>
-          <el-icon class="header-icon">
-            <Search />
-          </el-icon>
-        </template>
-        <DataSearch ref="childSearch" @clickSearch="clickSearch"></DataSearch>
-      </el-collapse-item>
-    </el-collapse>
+
+    <DataSearch ref="childSearch" @clickSearch="clickSearch"></DataSearch>
+
 
 
     <div class="table-button" style="padding: 15px;">
-      <el-button type="primary" @click="clickAdd"> 添加 </el-button>
+      <el-button type="primary" @click="clickAdd"> 新增 </el-button>
     </div>
 
     <el-scrollbar style="height: 100%;">
-      <el-table :data="tableData" row-key="id" stripe border max-height="500px" @sort-change="sortChange">
+      <el-table :data="tableData" row-key="id" border max-height="1000px" show-overflow-tooltip
+        @sort-change="sortChange">
 
         <el-table-column type="index" width="40" />
 
         <template v-for="item in tableConfig.columns">
           <template v-if="!item.hidden">
-            <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
-              :label="item.label" sortable="custom" />
-            <el-table-column v-else :prop="item.prop" :label="item.label" sortable="custom" />
+
+            <el-table-column :prop="item.prop" :label="item.label" sortable="custom" />
+
           </template>
         </template>
 
@@ -73,22 +67,10 @@ import { tableConfig } from "@/scripts/tableConfig/systemMenu"
 
 import httpRequest from '@/scripts/httpRequest'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { useSelectionStore } from '@/stores/selection'
+// import { useSelectionStore } from '@/stores/selection'
 
 //数据对象
 const tableData = ref<Array<any>>([])
-
-//选项源
-const selection = useSelectionStore()
-const columnFormat = (row: any, column: any, cellValue: any, index: number) => {
-  const columnConfig = tableConfig.columns.find(o => o.prop == column.property)
-  if (columnConfig) {
-    const text = selection.GetSelectionText(columnConfig.selectOrigin, cellValue)
-
-    if (text) return text
-  }
-  return cellValue
-}
 
 //递归菜单
 const GetRecursionMenuList = (parentId: string, list: Array<any>) => {
@@ -102,7 +84,26 @@ const GetRecursionMenuList = (parentId: string, list: Array<any>) => {
     })
     return childList
   } else {
-    const rootList = list.filter(o => o.parentId == undefined || o.parentId == "")
+    //const rootList = list.filter(o => o.parentId == undefined || o.parentId == "")
+    const rootList = []
+    list.forEach(o => {
+
+      if (o.parentId == undefined || o.parentId == "") {
+        rootList.push(o)
+        return
+      }
+      let hasParent = false
+      list.forEach(x => {
+        if (o.parentId == x.id) {
+          hasParent = true
+          return
+        }
+      })
+      if (!hasParent) {
+        rootList.push(o)
+      }
+    })
+
     rootList.forEach(o => {
       const childList = GetRecursionMenuList(o.id, list)
       if (childList) {
@@ -198,43 +199,34 @@ const editCallBack = () => {
 //获取数据
 const GetData = () => {
 
-  setTimeout(() => {
+  httpRequest.get(tableConfig.getUrl, {
+    currentPage: childPagination.value.pagination.currentPage,
+    pageSize: childPagination.value.pagination.pageSize,
+    orderProp: orderby.value.prop,
+    orderby: orderby.value.order,
+    searchBody: JSON.stringify(searchBody),
+  }).then(function (response) {
+    if (response.data.isSuccess) {
 
-    httpRequest.get(tableConfig.getUrl, {
-      currentPage: childPagination.value.pagination.currentPage,
-      pageSize: childPagination.value.pagination.pageSize,
-      orderProp: orderby.value.prop,
-      orderby: orderby.value.order,
-      searchBody: JSON.stringify(searchBody),
-    }).then(function (response) {
-      if (response.data.isSuccess) {
+      const data = response.data.data.data
+      const total = response.data.data.total
 
-        const data = response.data.data.data
-        const total = response.data.data.total
+      const resultData = GetRecursionMenuList("", data)
 
-        const resultData = GetRecursionMenuList("", data)
+      tableData.value = resultData
+      childPagination.value.dataLoad(total)
 
-        // alert(data[0].email)
-        tableData.value = resultData
-        childPagination.value.dataLoad(total)
+      ElMessage({
+        message: "刷新列表",
+        type: 'success',
+      })
 
-        ElMessage({
-          message: "刷新列表",
-          type: 'success',
-        })
-
-      }
-    })
-  }, 1000);
-
-
-
-
+    }
+  })
 }
 
 onMounted(() => {
   childSearch.value.dataLoad(tableConfig)
-  selection.init()
   GetData()
 })
 

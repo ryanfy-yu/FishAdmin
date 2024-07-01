@@ -41,7 +41,8 @@ import { useRouter } from 'vue-router'
 import httpRequest from '@/scripts/httpRequest'
 import { useUserInfoStore } from '@/stores/userInfo';
 import { ElMessage } from 'element-plus'
-import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
+import { appsettings } from '@/scripts/appSettings';
 
 interface RuleForm {
     username: string | null
@@ -95,7 +96,7 @@ const submitToLogin = () => {
 
     isLoding.value = true;
 
-    httpRequest.post("http://localhost:5142/api/Login",
+    httpRequest.post(`${appsettings.sso_URL}/Login`,
         {
             UsernameOfEmail: ruleForm.username,
             Password: ruleForm.password
@@ -106,7 +107,7 @@ const submitToLogin = () => {
                 userinfoStore.accessToken = response.data.data.access_token
                 userinfoStore.refreshToken = response.data.data.refresh_token
                 userinfoStore.username = response.data.data.username
-
+                userinfoStore.menus = response.data.data.menus
                 ElMessage({
                     message: "登陆成功，跳转首页！",
                     type: 'success',

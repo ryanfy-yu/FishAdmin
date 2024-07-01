@@ -9,19 +9,31 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
     const accessToken = ref("")
     const refreshToken = ref("")
     const username = ref("")
-    //const userInfo = ref<UserInfoType>()
+    const menus = ref([])
 
     const clear = function () {
-
         accessToken.value = ""
         refreshToken.value = ""
         username.value = ""
+        menus.value = []
         sessionStorage.removeItem("SystemUserInfo")
+    }
+
+    const getHomeMenu = () => {
+
+
 
     }
 
 
-    return { username, accessToken, refreshToken, clear }
+
+
+    
+
+
+
+
+    return { username, getHomeMenu, accessToken, refreshToken, clear }
 
 }, {
     //持久化

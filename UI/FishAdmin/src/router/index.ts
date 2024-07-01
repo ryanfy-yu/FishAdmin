@@ -7,11 +7,15 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: ()=>import("@/views/LoginView.vue")
+      component: () => import("@/views/LoginView.vue")
     },
+    // {
+    //   path: '/test',
+    //   component: () => import('@/views/TestView.vue')
+    // },
     {
       path: '/index',
-      component: ()=>import("@/views/IndexView.vue"),
+      component: () => import("@/views/IndexView.vue"),
       children: [
         {
           path: '/datalist/usermanage',
@@ -32,6 +36,10 @@ const router = createRouter({
         {
           path: '/home',
           component: () => import('@/views/HomeView.vue')
+        },
+        {
+          path: '/test',
+          component: () => import('@/views/TestView.vue')
         },
         {
           path: '/:catchAll(.*)',

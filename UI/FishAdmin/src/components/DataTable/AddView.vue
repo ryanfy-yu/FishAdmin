@@ -1,128 +1,130 @@
 <template>
     <el-drawer v-model="isShow" size="50%" title="编辑" direction="ltr" :before-close="handleClose">
-        <el-form label-width="auto">
-            <template v-for="item in detail">
-                <template v-if="!item.hidden">
+        <el-form label-width="auto" :model="formData" ref="refForm" :rules="_tableConfig.formRoles">
+            <template v-for="(value, key) in formData" :item="GetAttr(key)">
+                <template v-if="GetAttr(key).editable || !GetAttr(key).hidden">
 
-
-                    <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
-                        <el-select v-model="item.value" placeholder="未选择" :disabled="!item.editable">
-                            <el-option v-for="o in getOptions(item)" :label="o.label" :value="o.value" />
-                        </el-select>
+                    <el-form-item v-if="GetAttr(key).formField == 'number'" :label="GetAttr(key).label"
+                        :prop="GetAttr(key).prop">
+                        <el-input type="number" v-model="formData[key]" :disabled="!GetAttr(key).editable" />
                     </el-form-item>
 
-                    <el-form-item v-else-if="item.formField == 'number'" :label="item.label" :prop="item.prop">
-                        <el-input type="number" v-model="item.value" :disabled="!item.editable" />
+                    <el-form-item v-else-if="GetAttr(key).formField == 'MenuNodeSelector'" :label="GetAttr(key).label"
+                        :prop="GetAttr(key).prop">
+                        <MenuNodeSelector v-model="formData[key]"></MenuNodeSelector>
                     </el-form-item>
 
-                    <el-form-item v-else :label="item.label" :prop="item.prop">
-                        <el-input v-model="item.value" :disabled="!item.editable" />
+                    <el-form-item v-else-if="GetAttr(key).formField == 'switch'" :label="GetAttr(key).label"
+                        :prop="GetAttr(key).prop">
+                        <el-switch v-model="formData[key]" :disabled="!GetAttr(key).editable" />
                     </el-form-item>
+
+                    <el-form-item v-else :label="GetAttr(key).label" :prop="GetAttr(key).prop">
+                        <el-input v-model="formData[key]" :disabled="!GetAttr(key).editable" />
+                    </el-form-item>
+
                 </template>
-
-
             </template>
             <el-form-item>
-                <el-button @click="resetForm()">重置</el-button>
-                <el-button type="primary" @click="submitForm()">确定</el-button>
+                <el-button @click="resetForm(refForm)">重置</el-button>
+                <el-button type="primary" @click="submitForm(refForm)">确定</el-button>
             </el-form-item>
         </el-form>
     </el-drawer>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { ElDrawer, ElMessageBox, ElMessage } from 'element-plus'
-import httpRequest from '@/scripts/httpRequest'
-import { useSelectionStore } from '@/stores/selection'
+import { ref } from "vue";
+import { ElDrawer, ElMessageBox, ElMessage } from "element-plus";
+// import { useSelectionStore } from '@/stores/selection'
+import httpRequest from "@/scripts/httpRequest";
 
-const detail = ref<Array<any>>([])
-const isShow = ref(false)
+import MenuNodeSelector from "@/components/System/MenuNodeSelector.vue";
 
-let _item: any = {}
-let _tableConfig: any = {}
+const formData = ref({});
+const isShow = ref(false);
 
+let _rowData: any = {};
+let _tableConfig: any = {};
 
-const selectionStore = useSelectionStore()
-const getOptions = (item) => {
+const GetAttr = (keyName: string) => {
+    return _tableConfig.columns.find((o) => o.prop == keyName);
+};
 
-    const list = selectionStore.GetSelectionOptions(item.selectOrigin)
+const dataLoad = function (rowData: any, tableConfig: any) {
+    _rowData = rowData;
 
-    if (list) return list
-    return []
+    _tableConfig = tableConfig;
 
-}
+    isShow.value = true;
+    let list: Array<any> = [];
 
-const dataLoad = function (item: any, tableConfig: any) {
-    _item = item
+    tableConfig.columns.forEach((column) => {
 
-    _tableConfig = tableConfig
+        if (rowData) {
+            for (const key in rowData) {
+                if (column.prop == key) {
 
-    isShow.value = true
-    let list: Array<any> = []
-
-    _tableConfig.columns.forEach(o => {
-        list.push({ prop: o.prop, editable: o.editable, required: o.required, label: o.label, value: "", selectOrigin: o.selectOrigin, formField: o.formField, index: o.index })
-
-    })
-    detail.value = list.sort((a, b) => a.index - b.index)
-
-}
+                    if (column.dataType == "Array") {
+                        formData.value[key] = rowData[key] ? JSON.parse(rowData[key]) : "";
+                    } else {
+                        formData.value[key] = rowData[key] ? rowData[key].toString() : "";
+                    }
+                }
+            }
+        } else {
+            formData.value[column.prop] = column.defaultValue
+        }
+    });
+};
 
 const handleClose = (done: Function) => {
-    done()
-}
+    done();
+};
 
 const saveData = () => {
 
-    let data: { [key: string]: object } = {};
-    detail.value.forEach(item => {
-        data[item.prop] = item.value
-    });
-
-
-    httpRequest.post(_tableConfig.postUrl, data
-
-    ).then(function (response) {
+    httpRequest.post(_tableConfig.postUrl, formData.value).then(function (response) {
         if (response.data.isSuccess) {
             ElMessage({
                 message: "保存成功！",
-                type: 'success',
-            })
-
+                type: "success",
+            });
+            setTimeout(() => {
+                emits("callback");
+            }, 3000);
         } else {
             ElMessage({
                 message: "保持失败！消息：" + response.data.error,
-                type: 'success',
-            })
-
+                type: "error",
+            });
         }
-    })
-}
+    });
+};
 
+const refForm = ref<FormInstance>();
+const submitForm = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return;
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+            ElMessageBox.confirm(`确定提交修改？`).then(() => {
 
-const submitForm = () => {
-    ElMessageBox.confirm(`确定提交？`)
-        .then(() => {
-            saveData()
-            setTimeout(() => {
-                emits("callback")
-            }, 3000);
+                saveData();
+            });
+        } else {
+            console.log("error submit!", fields);
+        }
+    });
+};
 
-        })
-}
+const resetForm = (formEl: FormInstance | undefined) => {
+    ElMessageBox.confirm(`确定重置？`).then(() => {
+        formEl.resetFields();
+        dataLoad(_rowData, _tableConfig);
+    });
+};
 
-const resetForm = () => {
+const emits = defineEmits(["callback"]);
 
-    ElMessageBox.confirm(`确定重置？`)
-        .then(() => {
-            dataLoad(_item, _tableConfig)
-
-        })
-}
-
-const emits = defineEmits(["callback"])
-
-defineExpose({ dataLoad })
-
+defineExpose({ dataLoad });
 </script>

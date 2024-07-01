@@ -14,8 +14,6 @@ namespace FishManagementSystem.Server.Controllers.Dictionaries
     /// <summary>
     /// 系统用户
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
     public class DictionariesController : FishControllerBase
     {
         public readonly IDataService _dataService;

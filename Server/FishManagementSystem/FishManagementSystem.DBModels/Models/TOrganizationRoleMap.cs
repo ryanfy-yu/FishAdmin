@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace FishManagementSystem.DBModels.Models
 {
-    public class TSystemRoleMenuMap : ModelBase
+    /// <summary>
+    /// 组织架构-角色 关联
+    /// </summary>
+    public class TOrganizationRoleMap : ModelBase
     {
-        public string MenuId { get; set; }
+        public string OrgId { get; set; }
 
         public string RoleId { get; set; }
 

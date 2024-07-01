@@ -1,40 +1,48 @@
 <template>
-  <el-form inline label-width="auto">
+  <el-collapse>
+    <el-collapse-item>
+      <template #title>
+        <el-icon class="header-icon">
+          <Search />
+        </el-icon>
+      </template>
+      <el-form inline label-width="auto">
 
-    <template v-for="item in searchList">
+        <template v-for="item in searchList">
+          <template v-if="item.queryable">
+
+            <el-form-item v-if="item.formField == 'datetime'" :label="item.label">
+              <el-date-picker v-model="item.value" type="datetimerange" :default-time="defaultTime"
+                value-format="YYYY-MM-DD HH:mm" time-format="HH:mm" format="YYYY-MM-DD HH:mm" style="width: 300px;" />
+            </el-form-item>
+
+            <el-form-item v-else :label="item.label" :prop="item.prop">
+              <el-input v-model="item.value" />
+            </el-form-item>
+          </template>
+
+        </template>
+
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button @click="onReset">清空</el-button>
+        </el-form-item>
 
 
-      <el-form-item v-if="item.formField == 'select'" :label="item.label" :prop="item.prop">
-        <el-select v-model="item.value" placeholder="未选择" style="width: 195px">
-          <el-option v-for="o in getOptions(item)" :label="o.label" :value="o.value" />
-        </el-select>
-      </el-form-item>
 
-      <el-form-item v-else-if="item.formField == 'datetime'" :label="item.label">
-        <!-- <el-date-picker v-model="item.value" type="daterange" range-separator="-" value-format="YYYY/MM/DD HH:mm"
-          :default-time="defaultTime" /> -->
-
-        <el-date-picker v-model="item.value" type="datetimerange" :default-time="defaultTime"
-          value-format="YYYY-MM-DD HH:mm" time-format="HH:mm" format="YYYY-MM-DD HH:mm"/>
-      </el-form-item>
-
-      <el-form-item v-else :label="item.label" :prop="item.prop">
-        <el-input v-model="item.value" />
-      </el-form-item>
+      </el-form>
+    </el-collapse-item>
+  </el-collapse>
 
 
-    </template>
 
-  </el-form>
-  <div>
-    <el-button type="primary" @click="onSubmit">查询</el-button>
-    <el-button @click="onReset">清空</el-button>
-  </div>
+
+
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useSelectionStore } from '@/stores/selection'
+// import { useSelectionStore } from '@/stores/selection'
 
 
 
@@ -44,19 +52,19 @@ const defaultTime = ref<[Date, Date]>([
 ])
 
 
-
-
-
 const searchList = ref<Array<any>>([])
 
 const dataLoad = function (tableConfig: any) {
-  let list = <Array<any>>[]
 
-  tableConfig.columns.forEach(item => {
+  let list: Array<any> = []
 
-    if (item.queryable) {
-      list.push({ index: item.index, prop: item.prop, label: item.label, formField: item.formField, selectOrigin: item.selectOrigin, value: '' })
-    }
+  tableConfig.columns.forEach(column => {
+    let entity: any = {}
+
+    entity = column
+    entity.value = ""//column.defaultValue
+
+    list.push(entity)
   })
 
   searchList.value = list.sort((a, b) => a.index - b.index)
@@ -64,15 +72,15 @@ const dataLoad = function (tableConfig: any) {
 }
 
 
-const selectionStore = useSelectionStore()
-const getOptions = (item) => {
+// const selectionStore = useSelectionStore()
+// const getOptions = (item) => {
 
-  const list = selectionStore.GetSelectionOptions(item.selectOrigin)
+//   const list = selectionStore.GetSelectionOptions(item.selectOrigin)
 
-  if (list) return list
-  return []
+//   if (list) return list
+//   return []
 
-}
+// }
 
 const onReset = () => {
   searchList.value.forEach(o => o.value = "")

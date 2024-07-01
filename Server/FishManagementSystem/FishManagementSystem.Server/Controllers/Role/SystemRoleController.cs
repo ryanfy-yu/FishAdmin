@@ -20,8 +20,6 @@ namespace FishManagementSystem.Server.Controllers.Role
     /// <summary>
     /// 系统用户
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
     public class SystemRoleController : FishControllerBase
     {
         public readonly ISystemUsersDataService _dataService;

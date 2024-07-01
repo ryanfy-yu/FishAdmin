@@ -14,7 +14,7 @@ namespace FishManagementSystem.DBModels.Utils
         //数据库是主键需要加上IsPrimaryKey 
         //注意：要完全和数据库一致2个属性
 
-        [SugarColumn(IsPrimaryKey = true, DefaultValue = "UUID()", IsOnlyIgnoreInsert = true)]
+        [SugarColumn(IsPrimaryKey = true)]
         public string Id { get; set; }
 
         [SugarColumn(DefaultValue = "NOW()", IsOnlyIgnoreInsert = true)]
@@ -23,7 +23,7 @@ namespace FishManagementSystem.DBModels.Utils
         [SugarColumn(DefaultValue = "NOW()", IsOnlyIgnoreInsert = true)]
         public DateTime UpdateDate { get; set; }
 
-        [SugarColumn(DefaultValue = "1")]
+        [SugarColumn(DefaultValue = "0")]
         public virtual bool IsDeleted { get; set; }
 
     }

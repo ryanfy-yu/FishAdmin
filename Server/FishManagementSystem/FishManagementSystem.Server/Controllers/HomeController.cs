@@ -12,8 +12,6 @@ namespace FishManagementSystem.Server.Controllers
     /// <summary>
     /// home页面
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
     public class HomeController : FishControllerBase
     {
         public readonly IDataService _dataService;

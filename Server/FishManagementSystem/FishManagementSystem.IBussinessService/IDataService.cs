@@ -26,6 +26,7 @@ namespace FishManagementSystem.IBussinessService
         public bool Add<T>(Dictionary<string, object> model) where T : IModel, new();
 
 
+
         public int Add<T>(List<Dictionary<string, object>> list) where T : IModel, new();
 
 
@@ -41,7 +42,7 @@ namespace FishManagementSystem.IBussinessService
         public bool Update<T>(T model) where T : IModel, new();
 
 
-        public int Update<T>(List<Dictionary<string,object>> list) where T : IModel, new();
+        public int Update<T>(List<Dictionary<string,dynamic>> list) where T : IModel, new();
 
         public int Update<T>(List<T> list) where T : IModel, new();
     }

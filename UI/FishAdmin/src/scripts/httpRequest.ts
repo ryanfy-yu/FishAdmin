@@ -1,5 +1,4 @@
 import axiosExt from '@/scripts/axiosExt'
-import qs from 'qs'
 
 const httpRequest = {
     /**
@@ -38,6 +37,10 @@ const httpRequest = {
             url: url,
             params: params
         }
+        return axiosExt(config)
+    },
+    request(config: object) {
+
         return axiosExt(config)
     },
 }

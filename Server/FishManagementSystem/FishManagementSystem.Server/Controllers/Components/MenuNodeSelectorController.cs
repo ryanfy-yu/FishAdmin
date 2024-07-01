@@ -6,19 +6,17 @@ using FishManagementSystem.Server.Utils;
 using FishManagementSystem.Swagger;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FishManagementSystem.Server.Controllers.Dictionaries
+namespace FishManagementSystem.Server.Controllers.Components
 {
     /// <summary>
     /// Selection
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class MenuCascaderController : FishControllerBase
+    public class MenuNodeSelectorController : FishControllerBase
     {
         public readonly IDataService _dataService;
 
 
-        public MenuCascaderController(IDataService dataService, IMapper mapper, ILogger<MenuCascaderController> logger) : base(logger, mapper)
+        public MenuNodeSelectorController(IDataService dataService, IMapper mapper, ILogger<MenuNodeSelectorController> logger) : base(logger, mapper)
         {
             _dataService = dataService;
 
@@ -33,8 +31,7 @@ namespace FishManagementSystem.Server.Controllers.Dictionaries
         public ApiResult Get()
         {
 
-
-            var data = _dataService.Get<TSystemMenus>();
+            var data = _dataService.Get<TSystemMenu>(o => o.MenuType == 2);
 
             return new ApiResult()
             {
@@ -43,9 +40,5 @@ namespace FishManagementSystem.Server.Controllers.Dictionaries
             };
 
         }
-
-
-
-
     }
 }

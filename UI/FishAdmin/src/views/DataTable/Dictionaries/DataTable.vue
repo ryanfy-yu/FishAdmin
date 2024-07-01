@@ -1,24 +1,18 @@
 <template>
   <div style="padding: 15px;">
 
-    <el-collapse>
-      <el-collapse-item>
-        <template #title>
-          <el-icon class="header-icon">
-            <Search />
-          </el-icon>
-        </template>
-        <DataSearch ref="childSearch" @clickSearch="clickSearch"></DataSearch>
-      </el-collapse-item>
-    </el-collapse>
+
+    <DataSearch ref="childSearch" @clickSearch="clickSearch"></DataSearch>
+
 
 
     <div class="table-button" style="padding: 15px;">
-      <el-button type="primary" @click="clickAdd"> 添加 </el-button>
+      <el-button type="primary" @click="clickAdd"> 新增 </el-button>
     </div>
 
     <el-scrollbar style="height: 100%;">
-      <el-table :data="tableData" stripe border max-height="500px" @sort-change="sortChange">
+      <el-table :data="tableData" row-key="id" border max-height="1000px" show-overflow-tooltip
+      @sort-change="sortChange">
 
         <el-table-column type="index" width="40" />
 

@@ -20,8 +20,6 @@ namespace FishManagementSystem.Server.Controllers.Menu
     /// <summary>
     /// 系统用户
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
     public class SystemMenuController : FishControllerBase
     {
         public readonly ISystemUsersDataService _dataService;
@@ -32,6 +30,7 @@ namespace FishManagementSystem.Server.Controllers.Menu
             _dataService = dataService;
 
         }
+
         /// <summary>
         /// 获取列表数据
         /// </summary>
@@ -72,7 +71,7 @@ namespace FishManagementSystem.Server.Controllers.Menu
                     }
                 }
 
-                var data = _dataService.Get<TSystemMenus>(dto.CurrentPage, dto.PageSize, ref total, ref totalPages, conModels, orderList);
+                var data = _dataService.Get<TSystemMenu>(dto.CurrentPage, dto.PageSize, ref total, ref totalPages, conModels, orderList);
 
                 return new ApiResult()
                 {
@@ -99,26 +98,37 @@ namespace FishManagementSystem.Server.Controllers.Menu
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
         public ApiResult Post(Dictionary<string, object> dto)
         {
-            var result = _dataService.Add<TSystemMenus>(dto);
-
-            if (result)
+            try
             {
-                return new ApiResult()
-                {
-                    IsSuccess = true,
+                var result = _dataService.Add<TSystemMenu>(dto);
 
-                };
+                if (result)
+                {
+                    return new ApiResult()
+                    {
+                        IsSuccess = true,
+                    };
+                }
+                else
+                {
+                    return new ApiResult()
+                    {
+                        IsSuccess = false,
+                        Error = "错误未知！"
+                    };
+                }
+
             }
-            else
+            catch (Exception ex)
             {
+
                 return new ApiResult()
                 {
+                    Error = ex.Message,
                     IsSuccess = false,
-
                 };
 
             }
-
         }
 
         /// <summary>
@@ -129,22 +139,34 @@ namespace FishManagementSystem.Server.Controllers.Menu
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
         public ApiResult Put(Dictionary<string, object> dto)
         {
-            var result = _dataService.Update<TSystemMenus>(dto);
-
-            if (result)
+            try
             {
-                return new ApiResult()
-                {
-                    IsSuccess = true,
+                var result = _dataService.Update<TSystemMenu>(dto);
 
-                };
+                if (result)
+                {
+                    return new ApiResult()
+                    {
+                        IsSuccess = true,
+                    };
+                }
+                else
+                {
+                    return new ApiResult()
+                    {
+                        IsSuccess = false,
+                        Error = "错误未知！"
+                    };
+                }
+
             }
-            else
+            catch (Exception ex)
             {
+
                 return new ApiResult()
                 {
+                    Error = ex.Message,
                     IsSuccess = false,
-
                 };
 
             }
@@ -160,7 +182,7 @@ namespace FishManagementSystem.Server.Controllers.Menu
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
         public ApiResult Delete(string id)
         {
-            var result = _dataService.Delete<TSystemMenus>(id);
+            var result = _dataService.Delete<TSystemMenu>(id);
 
 
             if (result)
@@ -178,11 +200,7 @@ namespace FishManagementSystem.Server.Controllers.Menu
                     IsSuccess = false,
 
                 };
-
             }
-
-
-
         }
 
 

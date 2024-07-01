@@ -60,7 +60,7 @@ const checkLogined = () => {
 
 
 const dataLoad = () => {
-  //checkLogined()
+  
   const homeMenusStore = useHomeMenusStore()
   homeMenusStore.menuList = [
     {
@@ -68,6 +68,12 @@ const dataLoad = () => {
       title: '首页',
       icon: 'HomeFilled',
       path: '/home',
+    },
+    {
+      index: "10",
+      title: 'Test',
+      icon: 'HomeFilled',
+      path: '/Test',
     },
     {
       index: "1",
@@ -102,18 +108,18 @@ const dataLoad = () => {
       ]
     },
     {
-      index: "5",
+      index: "50",
       title: '事物管理',
       icon: 'search',
       children: [
         {
-          index: '6',
+          index: '60',
           title: '物件管理',
           icon: 'Document',
           path: '/caaaaase_manage',
         },
         {
-          index: '7',
+          index: '70',
           title: '物件研判',
           icon: 'Document',
           path: '/datalist',

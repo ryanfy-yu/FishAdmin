@@ -11,6 +11,8 @@ namespace FishManagementSystem.Server.Utils
     /// 授权验证
     /// </summary>
     [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
     public class FishControllerBase : ControllerBase
     {
 

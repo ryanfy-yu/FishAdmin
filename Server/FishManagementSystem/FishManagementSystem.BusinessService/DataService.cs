@@ -5,6 +5,7 @@ using FishManagementSystem.IBussinessService;
 using FishManagementSystem.IDBModels;
 using Microsoft.Extensions.Configuration;
 using SqlSugar;
+using SqlSugar.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -90,27 +91,34 @@ namespace FishManagementSystem.BusinessService
         public bool Add<T>(Dictionary<string, object> model) where T : IModel, new()
         {
 
-            var dic = new Dictionary<string, object>();
+            var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             foreach (var key in model.Keys)
             {
-                dic.Add(key.ToLower(), model[key]);
+                dic.Add(key, model[key].ObjToString());
             }
-            dic["CreateDate".ToLower()] = DateTime.Now;
-            dic["IsDeleted".ToLower()] = false;
+            dic["Id"]=Guid.NewGuid().ToString("N");
 
             return _db.Insertable<T>(dic).ExecuteCommand() > 0;
         }
 
         public int Add<T>(List<Dictionary<string, object>> list) where T : IModel, new()
         {
-
+            List<Dictionary<string, object>> objList = new List<Dictionary<string, object>>();
             list.ForEach(o =>
             {
-                o.Add("CreateDate", DateTime.Now);
-                o.Add("IsDeleted", false);
+
+                var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                foreach (var key in o.Keys)
+                {
+                    dic.Add(key, o[key].ObjToString());
+                }
+
+                o["Id"] = Guid.NewGuid().ToString("N");
+
+                objList.Add(dic);
 
             });
-            return _db.Insertable(list).ExecuteCommand();
+            return _db.Insertable(objList).ExecuteCommand();
         }
 
 
@@ -140,8 +148,14 @@ namespace FishManagementSystem.BusinessService
 
         public bool Update<T>(Dictionary<string, object> model) where T : IModel, new()
         {
-            model.Add("UpdateDate", DateTime.Now);
-            return _db.Updateable<T>(model).ExecuteCommand() > 0;
+            var dic = new Dictionary<string, dynamic>(StringComparer.OrdinalIgnoreCase);
+            foreach (var key in model.Keys)
+            {
+                dic.Add(key.ToLower(), model[key].ObjToString());
+            }
+            dic["updatedate"] = DateTime.Now;
+
+            return _db.Updateable<T>(dic).ExecuteCommand() > 0;
         }
 
 

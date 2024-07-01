@@ -73,7 +73,7 @@ namespace FishManagementSystem.SSO.Controllers
             var result = _dataService.Update<TSystemUsers>(tData);
 
             //获取用户菜单
-           var menus = _dataService.Get<TSystemMenus>();
+           var menus = _dataService.Get<TSystemMenu>();
 
             string accessToken = _jwtToken.CreateToken(TokenType.Access, tData.Username);
             string refreshToken = _jwtToken.CreateToken(TokenType.Refresh, tData.Username);

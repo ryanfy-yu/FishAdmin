@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 
 namespace FishManagementSystem.DBModels.Models
 {
-    public class TSystemRoleMenuMap : ModelBase
+    /// <summary>
+    /// 组织架构-用户关联
+    /// </summary>
+    public class TOrganizationUserMap : ModelBase
     {
-        public string MenuId { get; set; }
+        public string OrgId { get; set; }
 
-        public string RoleId { get; set; }
+        public string UserId { get; set; }
 
         public int? Status { get; set; }
 
