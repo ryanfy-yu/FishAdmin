@@ -106,6 +106,7 @@ const saveData = () => {
             ElMessage({
                 message: "保存成功！",
                 type: "success",
+                grouping: true,
             });
             setTimeout(() => {
                 emits("callback");
@@ -114,6 +115,7 @@ const saveData = () => {
             ElMessage({
                 message: "保持失败！消息：" + response.data.error,
                 type: "error",
+                grouping: true,
             });
         }
     });

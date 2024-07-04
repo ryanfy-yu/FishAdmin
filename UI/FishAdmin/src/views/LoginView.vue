@@ -116,6 +116,7 @@ const submitToLogin = () => {
                 ElMessage({
                     message: "登陆成功，跳转首页！",
                     type: 'success',
+                    grouping: true,
                 })
 
             }

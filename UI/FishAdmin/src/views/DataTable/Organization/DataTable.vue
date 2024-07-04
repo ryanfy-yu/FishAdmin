@@ -151,6 +151,7 @@ const deleteItem = (row: any) => {
           ElMessage({
             message: "删除成功！",
             type: 'success',
+            grouping: true,
           })
 
 
@@ -161,6 +162,7 @@ const deleteItem = (row: any) => {
           ElMessage({
             message: "保删除失败！原因：" + response.data.error,
             type: 'error',
+            grouping: true,
           })
         }
       })
@@ -218,6 +220,7 @@ const GetData = () => {
       ElMessage({
         message: "刷新列表",
         type: 'success',
+        grouping: true,
       })
     }
   })
