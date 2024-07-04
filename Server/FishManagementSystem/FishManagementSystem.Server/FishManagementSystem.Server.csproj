@@ -13,7 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Menu\RouterController.cs" />
     <Compile Remove="Controllers\User\LoginController.cs" />
+    <Compile Remove="Controllers\ValuesController.cs" />
     <Compile Remove="Utils\AppConfigurtaionServices.cs" />
   </ItemGroup>
 

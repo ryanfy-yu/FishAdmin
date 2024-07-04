@@ -14,6 +14,12 @@
                         <MenuNodeSelector v-model="formData[key]"></MenuNodeSelector>
                     </el-form-item>
 
+                    <el-form-item v-else-if="GetAttr(key).formField == 'MenuTypeRadio'" :label="GetAttr(key).label"
+                        :prop="GetAttr(key).prop">
+                        <MenuTypeRadio v-model="formData[key]"></MenuTypeRadio>
+                    </el-form-item>
+
+
                     <el-form-item v-else-if="GetAttr(key).formField == 'switch'" :label="GetAttr(key).label"
                         :prop="GetAttr(key).prop">
                         <el-switch v-model="formData[key]" :disabled="!GetAttr(key).editable" />
@@ -40,6 +46,8 @@ import { ElDrawer, ElMessageBox, ElMessage } from "element-plus";
 import httpRequest from "@/scripts/httpRequest";
 
 import MenuNodeSelector from "@/components/System/MenuNodeSelector.vue";
+import MenuTypeRadio from "@/components/System/MenuTypeRadio.vue";
+
 
 const formData = ref({});
 const isShow = ref(false);
@@ -57,22 +65,29 @@ const dataLoad = function (rowData: any, tableConfig: any) {
     _tableConfig = tableConfig;
 
     isShow.value = true;
-    let list: Array<any> = [];
+    let obj: any = {};
 
-    tableConfig.columns.forEach((column) => {
+    //排序
+    const columns = tableConfig.columns.sort((a, b) => a.index - b.index)
 
-        for (const key in rowData) {
-            if (column.prop == key) {
+    columns.forEach((column) => {
 
-                if (column.dataType == "Array") {
-                    formData.value[key] = rowData[key] ? JSON.parse(rowData[key]) : "";
-                } else {
-                    formData.value[key] = rowData[key] ? rowData[key].toString() : "";
+        if (rowData) {
+            for (const key in rowData) {
+                if (column.prop == key) {
+
+                    if (column.dataType == "Array") {
+                        obj[key] = rowData[key] ? JSON.parse(rowData[key]) : "";
+                    } else {
+                        obj[key] = rowData[key] ? rowData[key].toString() : "";
+                    }
                 }
             }
+        } else {
+            obj[column.prop] = column.defaultValue
         }
-
     });
+    formData.value = obj
 };
 
 const handleClose = (done: Function) => {
@@ -82,7 +97,7 @@ const handleClose = (done: Function) => {
 const saveData = () => {
 
 
-    
+
 
     httpRequest.put(_tableConfig.putUrl, formData.value).then(function (response) {
         if (response.data.isSuccess) {

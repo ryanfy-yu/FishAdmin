@@ -10,16 +10,13 @@ namespace FishManagementSystem.DBModels.Models
     public class TSystemMenu : ModelBase
     {
         /// <summary>
-        /// 所有上级菜单
-        /// </summary>
-        public string? ParentIds { get; set; }
-
-        /// <summary>
-        /// 直接上级菜单
+        /// 上级菜单
         /// </summary>
         public string? ParentId { get; set; }
 
         public string MenuName { get; set; }
+
+        public string MenuCode { get; set; }
 
         public int? MenuType { get; set; }
 

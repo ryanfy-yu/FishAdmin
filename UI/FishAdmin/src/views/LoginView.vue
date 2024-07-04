@@ -9,14 +9,15 @@
                             Login
                         </div>
 
-                        <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="auto"
-                            class="demo-ruleForm" status-icon @keyup.enter="submitForm(ruleFormRef)">
-                            <el-form-item prop="username">
-                                <el-input v-model="ruleForm.username" laceholder="请输入用户名或者邮箱" aria-label="请输入用户名或者邮箱" />
+                        <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="auto" class="ruleForm"
+                            status-icon @keyup.enter="submitForm(ruleFormRef)">
+                            <el-form-item :prop="ruleForm.username">
+                                <el-input v-model="ruleForm.username" placeholder="请输入用户名或者邮箱"
+                                    aria-label="请输入用户名或者邮箱" />
                             </el-form-item>
 
-                            <el-form-item prop="password">
-                                <el-input v-model="ruleForm.password" type="password" laceholder="请输入密码"
+                            <el-form-item :prop="ruleForm.password">
+                                <el-input v-model="ruleForm.password" type="password" placeholder="请输入密码"
                                     aria-label="请输入用户名或者邮箱" />
                             </el-form-item>
                             <el-form-item>
@@ -104,26 +105,33 @@ const submitToLogin = () => {
         .then(function (response) {
             // 处理成功情况
             if (response.data.isSuccess) {
+                window.localStorage.clear()
+                window.sessionStorage.clear()
+
                 userinfoStore.accessToken = response.data.data.access_token
                 userinfoStore.refreshToken = response.data.data.refresh_token
                 userinfoStore.username = response.data.data.username
-                userinfoStore.menus = response.data.data.menus
+                //userinfoStore.menus = response.data.data.menus
+
                 ElMessage({
                     message: "登陆成功，跳转首页！",
                     type: 'success',
                 })
 
-                //2秒跳转
+            }
+
+        }).then(() => {
+
+            userinfoStore.GetUserInfoFormApi().then(() => {
+
+                //1秒跳转
                 setInterval(() => {
                     router.push("/index")
                 }, 1000)
-            }
 
-        })
-        .catch(function (error) {
-            // 处理错误情况
-            ElMessage.error(error)
-            console.log(error);
+
+            })
+
         })
         .finally(function () {
             isLoding.value = false;
@@ -157,9 +165,7 @@ const submitToLogin = () => {
     opacity: 0.8;
 }
 
-
-
-.demo-ruleForm {
+.ruleForm {
     padding: 15px;
     text-align: center;
 }

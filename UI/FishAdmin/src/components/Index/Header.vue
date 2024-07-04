@@ -63,15 +63,9 @@ const hometabsStore = useHomeTabsStore()
 const router = useRouter()
 
 const logout = () => {
-  // var pinia =createPinia()
-  // userInfoStore.$reset()
   userInfoStore.clear()
-  homeMenusStore.clear()
-  hometabsStore.clear()
 
   router.push("/login")
-
-
 
 }
 

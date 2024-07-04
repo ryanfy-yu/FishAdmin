@@ -1,7 +1,12 @@
 <!-- 菜单级联选择 -->
 <template>
     <el-cascader v-model="cascaderModel" :props="cascaderProps" clearable @change="thisChange" placeholder="/"
-        :options="OptionData" style="width: 100%;" />
+        :options="OptionData" style="width: 100%;">
+        <template #default="{ node, data }">
+            <span>{{ data.label }}</span>
+            <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        </template>
+    </el-cascader>
 
 </template>
 

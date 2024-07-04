@@ -37,8 +37,6 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
 
     }
 
-
-
     return { menuList, defaultActive, clickMenuItem, clear }
 }, {
     //持久化

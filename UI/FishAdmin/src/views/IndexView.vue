@@ -34,104 +34,107 @@ import { useRouter } from 'vue-router'
 import httpRequest from '@/scripts/httpRequest'
 
 const userinfoStore = useUserInfoStore()
-const router = useRouter()
+//const router = useRouter()
 //const menusStore = useHomeMenusStore()
-const checkLogined = () => {
+// const checkLogined = () => {
 
-  if (userinfoStore.accessToken == "") {
-    router.isReady().then(() => {
+//   if (userinfoStore.accessToken == "") {
+//     router.isReady().then(() => {
 
-      ElMessage.error("未登录，请先登陆！")
+//       ElMessage.error("未登录，请先登陆！")
 
-      router.push("/login")
-    })
-  }
+//       router.push("/login")
+//     })
+//   }
 
-  httpRequest.get("http://localhost:5142/api/TokenValid", {})
-    .then(function (response) {
-      if (!response.data.isSuccess) {
-        ElMessage.error("未登录，请先登陆！")
+//   httpRequest.get("http://localhost:5142/api/TokenValid", {})
+//     .then(function (response) {
+//       if (!response.data.isSuccess) {
+//         ElMessage.error("未登录，请先登陆！")
 
-        router.push("/login")
-      }
-    })
-}
+//         router.push("/login")
+//       }
+//     })
+// }
 
 
 
 const dataLoad = () => {
-  
-  const homeMenusStore = useHomeMenusStore()
-  homeMenusStore.menuList = [
-    {
-      index: "0",
-      title: '首页',
-      icon: 'HomeFilled',
-      path: '/home',
-    },
-    {
-      index: "10",
-      title: 'Test',
-      icon: 'HomeFilled',
-      path: '/Test',
-    },
-    {
-      index: "1",
-      title: '系统管理',
-      icon: 'Setting',
-      path: '/system_manage',
-      children: [
-        {
-          index: '2',
-          title: '用户管理',
-          icon: 'Document',
-          path: '/datalist/usermanage',
-        },
-        {
-          index: '3',
-          title: '菜单管理',
-          icon: 'Document',
-          path: '/datalist/systemmenu',
-        },
-        {
-          index: '4',
-          title: '角色管理',
-          icon: 'Document',
-          path: '/datalist/systemrole',
-        },
-        {
-          index: '5',
-          title: '字典表',
-          icon: 'Document',
-          path: '/datalist/dictionaries',
-        }
-      ]
-    },
-    {
-      index: "50",
-      title: '事物管理',
-      icon: 'search',
-      children: [
-        {
-          index: '60',
-          title: '物件管理',
-          icon: 'Document',
-          path: '/caaaaase_manage',
-        },
-        {
-          index: '70',
-          title: '物件研判',
-          icon: 'Document',
-          path: '/datalist',
-        }
-      ]
-    },
-    {
-      index: "8",
-      title: '一键搜',
-      icon: 'Document',
-      path: '/search',
-    }]
+
+  // const homeMenusStore = useHomeMenusStore()
+  // homeMenusStore.menuList = userinfoStore.getHomeMenu()
+
+  // homeMenusStore.menuList = [
+  //   {
+  //     index: "0",
+  //     title: '首页',
+  //     icon: 'HomeFilled',
+  //     path: '/home',
+  //   },
+  //   {
+  //     index: "10",
+  //     title: 'Test',
+  //     icon: 'HomeFilled',
+  //     path: '/Test',
+  //   },
+  //   {
+  //     index: "1",
+  //     title: '系统管理',
+  //     icon: 'Setting',
+  //     path: '/system_manage',
+  //     children: [
+  //       {
+  //         index: '2',
+  //         title: '用户管理',
+  //         icon: 'Document',
+  //         path: '/datalist/usermanage',
+  //       },
+  //       {
+  //         index: '3',
+  //         title: '菜单管理',
+  //         icon: 'Document',
+  //         path: '/datalist/systemmenu',
+  //       },
+  //       {
+  //         index: '4',
+  //         title: '角色管理',
+  //         icon: 'Document',
+  //         path: '/datalist/systemrole',
+  //       },
+  //       {
+  //         index: '5',
+  //         title: '字典表',
+  //         icon: 'Document',
+  //         path: '/datalist/dictionaries',
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     index: "50",
+  //     title: '事物管理',
+  //     icon: 'search',
+  //     children: [
+  //       {
+  //         index: '60',
+  //         title: '物件管理',
+  //         icon: 'Document',
+  //         path: '/caaaaase_manage',
+  //       },
+  //       {
+  //         index: '70',
+  //         title: '物件研判',
+  //         icon: 'Document',
+  //         path: '/datalist',
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     index: "8",
+  //     title: '一键搜',
+  //     icon: 'Document',
+  //     path: '/search',
+  //   }]
+
 
 }
 

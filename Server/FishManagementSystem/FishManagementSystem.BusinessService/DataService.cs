@@ -96,7 +96,7 @@ namespace FishManagementSystem.BusinessService
             {
                 dic.Add(key, model[key].ObjToString());
             }
-            dic["Id"]=Guid.NewGuid().ToString("N");
+            dic["Id"] = Guid.NewGuid().ToString("N");
 
             return _db.Insertable<T>(dic).ExecuteCommand() > 0;
         }
@@ -114,7 +114,6 @@ namespace FishManagementSystem.BusinessService
                 }
 
                 o["Id"] = Guid.NewGuid().ToString("N");
-
                 objList.Add(dic);
 
             });

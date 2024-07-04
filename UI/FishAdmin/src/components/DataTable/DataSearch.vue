@@ -11,9 +11,13 @@
         <template v-for="item in searchList">
           <template v-if="item.queryable">
 
-            <el-form-item v-if="item.formField == 'datetime'" :label="item.label">
+            <el-form-item v-if="item.formField == 'datetime'" :label="item.label" :prop="item.prop">
               <el-date-picker v-model="item.value" type="datetimerange" :default-time="defaultTime"
                 value-format="YYYY-MM-DD HH:mm" time-format="HH:mm" format="YYYY-MM-DD HH:mm" style="width: 300px;" />
+            </el-form-item>
+
+            <el-form-item v-else-if="item.formField == 'MenuNodeSelector'" :label="item.label" :prop="item.prop">
+              <MenuNodeSelector v-model="item.value" />
             </el-form-item>
 
             <el-form-item v-else :label="item.label" :prop="item.prop">
@@ -42,7 +46,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-// import { useSelectionStore } from '@/stores/selection'
+import MenuNodeSelector from '@/components/System/MenuNodeSelector.vue'
 
 
 

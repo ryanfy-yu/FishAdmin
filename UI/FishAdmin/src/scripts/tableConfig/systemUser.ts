@@ -7,7 +7,7 @@ const columns = [
     { prop: "userType", hidden: false, label: "类型", editable: true, sortable: true, index: 6, queryable: true, formField: "select", selectOrigin: "usertype", defaultValue: "" },
     { prop: "imageUrl", hidden: false, label: "imageUrl", editable: true, sortable: true, index: 7, queryable: false, formField: "input", defaultValue: "" },
     { prop: "createDate", hidden: false, label: "创建时间", editable: false, sortable: true, index: 8, queryable: true, formField: "datetime", defaultValue: "" },
-    { prop: "updateDate", hidden: false, label: "最近更新时间", editable: false, sortable: true, index: 9, queryable: true, formField: "datetime", defaultValue: "" },
+    { prop: "updateDate", hidden: true, label: "最近更新时间", editable: false, sortable: true, index: 9, queryable: false, formField: "datetime", defaultValue: "" },
     { prop: "lastLoginTime", hidden: false, label: "最近登录时间", editable: false, sortable: true, index: 10, queryable: true, formField: "datetime", defaultValue: "" },
     { prop: "status", hidden: false, label: "状态", editable: true, sortable: true, index: 11, queryable: true, formField: "select", selectOrigin: "normal_status", defaultValue: "1" },
 ]

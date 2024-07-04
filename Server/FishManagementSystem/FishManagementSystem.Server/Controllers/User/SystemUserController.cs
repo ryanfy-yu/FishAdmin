@@ -97,7 +97,13 @@ namespace FishManagementSystem.Server.Controllers.User
         [ApiExplorerSettings(GroupName = nameof(ApiVersion.v1))]
         public ApiResult Post(Dictionary<string, object> dto)
         {
+
+
+            dto["password"] = Md5Helper.Md5_StringBuilder(dto["password"].ToString());
+
             var result = _dataService.Add<TSystemUsers>(dto);
+
+
 
             if (result)
             {

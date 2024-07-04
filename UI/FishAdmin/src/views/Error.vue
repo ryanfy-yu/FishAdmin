@@ -17,19 +17,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-
-const usernameOfEmail = ref("")
-const password = ref("")
-
-const submit_login = () => {
-    alert("submit")
-
-}
-
-const validateForm = computed(() => {
-    return usernameOfEmail.value === "" || password.value === ""
-})
 
 
 </script>

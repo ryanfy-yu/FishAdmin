@@ -7,6 +7,7 @@ using FishManagementSystem.SSO.ReqDto;
 using FishManagementSystem.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Security.Cryptography;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -52,7 +53,7 @@ namespace FishManagementSystem.SSO.Controllers
         {
 
             string usernameOrEmail = reqUserInfoDto.UsernameOfEmail;
-            string password = reqUserInfoDto.Password;
+            string password = Md5Helper.Md5_StringBuilder(reqUserInfoDto.Password);
 
 
             var tData = _dataService.Get<TSystemUsers>(o => (o.Username == usernameOrEmail || o.Email == usernameOrEmail) && o.Password == password).FirstOrDefault();
@@ -73,7 +74,28 @@ namespace FishManagementSystem.SSO.Controllers
             var result = _dataService.Update<TSystemUsers>(tData);
 
             //获取用户菜单
-           var menus = _dataService.Get<TSystemMenu>();
+            //var menus = _dataService.Get<TSystemMenu>().OrderBy(o => o.Sort).ToList();
+            //List<dynamic> menusList = new List<dynamic>();
+
+            //// menus.OrderBy(o => o.Sort).ToString();
+
+            //for (int i = 0; i < menus.Count; i++)
+            //{
+
+            //    menusList.Add(new
+            //    {
+            //        Index = i,
+            //        title = menus[i].MenuName,
+            //        Icon = menus[i].Icon,
+            //        path = menus[i].Url,
+            //        RouteView = menus[i].ViewUrl,
+            //        Id = menus[i].Id,
+            //        ParentId = menus[i].ParentId,
+            //    });
+
+
+            //}
+
 
             string accessToken = _jwtToken.CreateToken(TokenType.Access, tData.Username);
             string refreshToken = _jwtToken.CreateToken(TokenType.Refresh, tData.Username);
@@ -86,7 +108,7 @@ namespace FishManagementSystem.SSO.Controllers
                     access_token = accessToken,
                     refresh_token = refreshToken,
                     username = tData.Username,
-                    menus = menus
+                   // menus = menusList
                 }
             };
 

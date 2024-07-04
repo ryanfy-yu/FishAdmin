@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 using SqlSugar;
 using System.Collections;
 
-namespace FishManagementSystem.Server.Controllers.Dictionaries
+namespace FishManagementSystem.Server.Controllers
 {
     /// <summary>
     /// 单表查询

@@ -4,7 +4,8 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import piniaPersist from 'pinia-plugin-persistedstate'//pina持久化插件
 
-import router from './router'
+// import router from './router'
+import guards from "@/router/guards"
 
 import ElementPlus from 'element-plus'//全局引入
 import 'element-plus/dist/index.css'
@@ -25,7 +26,7 @@ pinia.use(piniaPersist)
 
 app.use(pinia)
 
-app.use(router)
+app.use(guards)
 
 app.use(ElementPlus)
 

@@ -31,7 +31,7 @@ namespace FishManagementSystem.Server.Controllers.Components
         public ApiResult Get()
         {
 
-            var data = _dataService.Get<TSystemMenu>(o => o.MenuType == 2);
+            var data = _dataService.Get<TSystemMenu>(o => o.MenuType != 3);
 
             return new ApiResult()
             {
