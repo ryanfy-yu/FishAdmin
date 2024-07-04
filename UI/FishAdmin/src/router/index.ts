@@ -9,10 +9,11 @@ const router = createRouter({
       name: 'login',
       component: () => import("@/views/LoginView.vue")
     },
-    // {
-    //   path: '/:catchAll(.*)',
-    //   component: () => import('@/views/Error.vue')
-    // },
+    {
+      name: "error",
+      path: '/:catchAll(.*)',
+      component: () => import('@/views/Error.vue')
+    }
     // {
     //   path: '/index',
     //   component: () => import("@/views/IndexView.vue"),

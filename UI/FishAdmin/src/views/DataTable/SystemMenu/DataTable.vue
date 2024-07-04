@@ -4,8 +4,6 @@
 
     <DataSearch ref="childSearch" @clickSearch="clickSearch"></DataSearch>
 
-
-
     <div class="table-button" style="padding: 15px;">
       <el-button type="primary" @click="clickAdd"> 新增 </el-button>
     </div>
@@ -61,6 +59,7 @@ import DetailView from '@/components/DataTable/DetailView.vue'
 import EditView from '@/components/DataTable/EditView.vue'
 import AddView from '@/components/DataTable/AddView.vue'
 import TablePagination from '@/components/DataTable/PaginationView.vue'
+
 
 //表配置，需要更換
 import { tableConfig } from "@/scripts/tableConfig/systemMenu"
@@ -121,6 +120,8 @@ const childEdit = ref()
 const childSearch = ref()
 const childPagination = ref()
 
+
+
 //列表按钮操作
 const handleClick = function (opType: string, index: number, row: object) {
   switch (opType) {
@@ -153,11 +154,7 @@ const deleteItem = (row: any) => {
             message: "删除成功！",
             type: 'success',
           })
-
-
           GetData()
-
-
         } else {
           ElMessage({
             message: "保删除失败！原因：" + response.data.error,
@@ -220,13 +217,15 @@ const GetData = () => {
         message: "刷新列表",
         type: 'success',
       })
-
     }
   })
 }
 
 onMounted(() => {
+
+  //初始化查询
   childSearch.value.dataLoad(tableConfig)
+
   GetData()
 })
 

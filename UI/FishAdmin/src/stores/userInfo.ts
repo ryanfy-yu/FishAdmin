@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { appsettings } from '@/scripts/appSettings';
 import httpRequest from '@/scripts/httpRequest'
+// import { useHomeMenusStore } from '@/stores/homeMenus';
 
 
 // 你可以任意命名 `defineStore()` 的返回值，但最好使用 store 的名字，同时以 `use` 开头且以 `Store` 结尾。
@@ -12,7 +13,7 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
     const accessToken = ref("")
     const refreshToken = ref("")
     const username = ref("")
-    const menus = ref([])
+    const userMenuList = ref([])
 
     const GetUserInfoFormApi = async () => {
         await httpRequest.get(`${appsettings.default_baseURL}/LoggedUserInfo`, {})
@@ -20,7 +21,10 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
                 // 处理成功情况
                 if (response.data.isSuccess) {
 
-                    menus.value = response.data.data.menus
+                   const temp  = response.data.data.menus
+
+                     userMenuList.value=temp.sort(o=>o.sort)
+
                 }
             })
     }
@@ -28,7 +32,8 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
     const getHomeMenu = () => {
 
         let menuList: Array<any> = []
-        menus.value.forEach((o, index) => {
+
+        userMenuList.value.forEach((o, index) => {
             menuList.push({
                 index: index,
                 title: o.menuName,
@@ -47,9 +52,9 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
     const getRouterList = () => {
 
         let routeList = []
-        if (menus && menus.value && menus.value.length > 0) {
+        if (userMenuList && userMenuList.value && userMenuList.value.length > 0) {
 
-            const menusList = menus.value.filter(o => o.menuType == 2)
+            const menusList = userMenuList.value.filter(o => o.menuType == 2)
 
 
             menusList.forEach((o) => {
@@ -111,21 +116,21 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
         accessToken.value = ""
         refreshToken.value = ""
         username.value = ""
-        menus.value = []
+        userMenuList.value = []
 
         window.localStorage.clear()
         window.sessionStorage.clear()
     }
 
     const isLoggedin = computed(() => {
-        if (username.value && accessToken.value && refreshToken.value && menus.value.length > 0) {
+        if (username.value && accessToken.value && refreshToken.value && userMenuList.value.length > 0) {
             return true
         }
 
         return false
     })
 
-    return { username, isLoggedin, menus, accessToken, refreshToken, getHomeMenu, getRouterList, clear, GetUserInfoFormApi }
+    return { username, isLoggedin, userMenuList, accessToken, refreshToken, getHomeMenu, getRouterList, clear, GetUserInfoFormApi }
 
 }, {
     //持久化

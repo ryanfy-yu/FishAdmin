@@ -37,6 +37,13 @@ export const useHomeTabsStore = defineStore('homeTabs', () => {
     }
     const addTab = (menu: any) => {
 
+
+        if(!menu.path){
+
+            router.push("/404")
+            return
+        }
+
         const tabs = tabsData.value
         const tab = tabs.find((tab) => tab.name == menu.index)
         if (tab == undefined) {

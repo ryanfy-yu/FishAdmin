@@ -10,6 +10,13 @@ router.beforeEach(async (to, from) => {
     const indexRoute = router.getRoutes().find(o => o.path == "/")
     const routeList = userInfoStore.getRouterList()
 
+
+    if (!userInfoStore.isLoggedin && to.name != "login") {
+
+        return { name: 'login' }
+    }
+
+
     //路由未生成，需要生成路由
     if (!indexRoute) {
         router.addRoute({
@@ -22,9 +29,9 @@ router.beforeEach(async (to, from) => {
             path: '/index',
             redirect: "/"
         })
-        console.log(router.getRoutes())
+
         //生成后重定向到index
-        return { name: to.name }
+        return { path: "/" }
     }
 
     //不在白名单需要处理

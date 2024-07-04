@@ -27,13 +27,13 @@
 import HomeMenus from '@/components/Index/Menus.vue'
 import HomeHeader from '@/components/Index/Header.vue'
 import HomeTabs from '@/components/Index/Tabs.vue'
-import { useUserInfoStore } from '@/stores/userInfo';
-import { useHomeMenusStore } from '@/stores/homeMenus';
-import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
-import httpRequest from '@/scripts/httpRequest'
+//import { useUserInfoStore } from '@/stores/userInfo';
+// import { useHomeMenusStore } from '@/stores/homeMenus';
+// import { ElMessage } from 'element-plus'
+// import { useRouter } from 'vue-router'
+// import httpRequest from '@/scripts/httpRequest'
 
-const userinfoStore = useUserInfoStore()
+// const userinfoStore = useUserInfoStore()
 //const router = useRouter()
 //const menusStore = useHomeMenusStore()
 // const checkLogined = () => {

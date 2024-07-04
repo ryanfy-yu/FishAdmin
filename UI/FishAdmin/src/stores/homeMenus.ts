@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useHomeTabsStore } from "@/stores/homeTabs"
-import { useRouter } from 'vue-router'
+import { useUserInfoStore } from '@/stores/userInfo'
 
 
 // 你可以任意命名 `defineStore()` 的返回值，但最好使用 store 的名字，同时以 `use` 开头且以 `Store` 结尾。
@@ -10,8 +10,9 @@ import { useRouter } from 'vue-router'
 export const useHomeMenusStore = defineStore('homeMenus', () => {
 
     //const router = useRouter()
+    const userInfoStore = useUserInfoStore()
 
-    const menuList = ref<any[]>([])
+    const menuList = userInfoStore.getHomeMenu()
 
     const defaultActive = ref("")
 
@@ -31,7 +32,7 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
 
     const clear = function () {
 
-        menuList.value = []
+        //menuList.values = []
         defaultActive.value = ""
         sessionStorage.removeItem("homeMenus")
 

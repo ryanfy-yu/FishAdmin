@@ -1,10 +1,7 @@
 <template>
   <div style="padding: 15px;">
 
-
     <DataSearch ref="childSearch" @clickSearch="clickSearch"></DataSearch>
-
-
 
     <div class="table-button" style="padding: 15px;">
       <el-button type="primary" @click="clickAdd"> 新增 </el-button>
@@ -17,10 +14,12 @@
         <el-table-column type="index" width="40" />
 
         <template v-for="item in tableConfig.columns">
-          <el-table-column v-if="!item.hidden" :prop="item.prop" :label="item.label" sortable="custom" />
+          <template v-if="!item.hidden">
+            <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
+              :label="item.label" sortable="custom" />
+            <el-table-column v-else :prop="item.prop" :label="item.label" sortable="custom" />
+          </template>
         </template>
-
-
 
         <el-table-column fixed="right" label="操作" width="150" v-if="tableConfig.Operations">
           <template #default="scope">
@@ -65,15 +64,10 @@ import { tableConfig } from "@/scripts/tableConfig/dictionaries"
 
 import httpRequest from '@/scripts/httpRequest'
 import { ElMessageBox, ElMessage } from 'element-plus'
+// import { useSelectionStore } from '@/stores/selection'
 
-//数据对象
+//表对象
 const tableData = ref([])
-
-
-//表配置
-// const tableColumn = columns
-// const tableConfig = opConfig
-
 
 //组件实例
 const childDetail = ref()
@@ -89,7 +83,7 @@ const handleClick = function (opType: string, index: number, row: object) {
       childDetail.value.dataLoad(row, tableConfig)
       break;
     case "Edit":
-      childEdit.value.dataLoad(row, tableConfig)
+      childEdit.value.dataLoad(row, tableConfig, tableConfig)
       break;
     case "Delete":
       deleteItem(row)
@@ -175,6 +169,7 @@ const GetData = () => {
         const data = response.data.data.data
         const total = response.data.data.total
 
+        // alert(data[0].email)
         tableData.value = data
         childPagination.value.dataLoad(total)
 
