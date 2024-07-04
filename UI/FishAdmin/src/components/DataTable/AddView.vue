@@ -14,6 +14,11 @@
                         <MenuNodeSelector v-model="formData[key]"></MenuNodeSelector>
                     </el-form-item>
 
+                    <el-form-item v-else-if="GetAttr(key).formField == 'OrganizationNodeSelector'" :label="GetAttr(key).label"
+                        :prop="GetAttr(key).prop">
+                        <OrganizationNodeSelector v-model="formData[key]"></OrganizationNodeSelector>
+                    </el-form-item>
+
                     <el-form-item v-else-if="GetAttr(key).formField == 'MenuTypeRadio'" :label="GetAttr(key).label"
                         :prop="GetAttr(key).prop">
                         <MenuTypeRadio v-model="formData[key]"></MenuTypeRadio>
@@ -45,6 +50,7 @@ import { ElDrawer, ElMessageBox, ElMessage } from "element-plus";
 import httpRequest from "@/scripts/httpRequest";
 
 import MenuNodeSelector from "@/components/System/MenuNodeSelector.vue";
+import OrganizationNodeSelector from "@/components/System/OrganizationNodeSelector.vue";
 import MenuTypeRadio from "@/components/System/MenuTypeRadio.vue";
 
 

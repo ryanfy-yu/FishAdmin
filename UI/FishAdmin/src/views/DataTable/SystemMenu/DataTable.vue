@@ -72,11 +72,11 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 const tableData = ref<Array<any>>([])
 
 //递归菜单
-const GetRecursionMenuList = (parentId: string, list: Array<any>) => {
+const GetRecursionDataList = (parentId: string, list: Array<any>) => {
   if (parentId && parentId != "") {
     const childList = list.filter(o => o.parentId == parentId)
     childList.forEach(o => {
-      const arr = GetRecursionMenuList(o.id, list)
+      const arr = GetRecursionDataList(o.id, list)
       if (arr) {
         o.children = arr;
       }
@@ -104,7 +104,7 @@ const GetRecursionMenuList = (parentId: string, list: Array<any>) => {
     })
 
     rootList.forEach(o => {
-      const childList = GetRecursionMenuList(o.id, list)
+      const childList = GetRecursionDataList(o.id, list)
       if (childList) {
         o.children = childList
       }
@@ -208,7 +208,7 @@ const GetData = () => {
       const data = response.data.data.data
       const total = response.data.data.total
 
-      const resultData = GetRecursionMenuList("", data)
+      const resultData = GetRecursionDataList("", data)
 
       tableData.value = resultData
       childPagination.value.dataLoad(total)

@@ -14,6 +14,11 @@
                         <MenuNodeSelector v-model="formData[key]"></MenuNodeSelector>
                     </el-form-item>
 
+                    <el-form-item v-else-if="GetAttr(key).formField == 'OrganizationNodeSelector'"
+                        :label="GetAttr(key).label" :prop="GetAttr(key).prop">
+                        <OrganizationNodeSelector v-model="formData[key]"></OrganizationNodeSelector>
+                    </el-form-item>
+
                     <el-form-item v-else-if="GetAttr(key).formField == 'MenuTypeRadio'" :label="GetAttr(key).label"
                         :prop="GetAttr(key).prop">
                         <MenuTypeRadio v-model="formData[key]"></MenuTypeRadio>

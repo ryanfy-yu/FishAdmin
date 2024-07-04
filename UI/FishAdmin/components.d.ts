@@ -59,6 +59,7 @@ declare module 'vue' {
     Menus: typeof import('./src/components/Index/Menus.vue')['default']
     MenusTree: typeof import('./src/components/Index/MenusTree.vue')['default']
     MenuTypeRadio: typeof import('./src/components/System/MenuTypeRadio.vue')['default']
+    OrganizationNodeSelector: typeof import('./src/components/System/OrganizationNodeSelector.vue')['default']
     PaginationView: typeof import('./src/components/DataTable/PaginationView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

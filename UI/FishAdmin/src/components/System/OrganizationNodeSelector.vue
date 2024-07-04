@@ -17,14 +17,14 @@ import httpRequest from '@/scripts/httpRequest'
 
 const cascaderModel = defineModel()
 const OptionData = ref([])
-const getDataList = () => {
-    httpRequest.get("/MenuNodeSelector", {}).then(function (response) {
+const getData= () => {
+    httpRequest.get("/OrganizationNodeSelector", {}).then(function (response) {
         if (response.data.isSuccess) {
             OptionData.value = GetOptions("", response.data.data)
         }
     })
 }
-getDataList()
+getData()
 
 
 const cascaderProps = {
@@ -43,30 +43,30 @@ const thisChange = (value: Array<string>) => {
 }
 
 //递归方法
-const GetOptions = (parentId: string, menus: Array<any>) => {
+const GetOptions = (parentId: string, dataList: Array<any>) => {
     if (parentId) {
-        const childList = menus.filter(o => o.parentId == parentId)
+        const childList = dataList.filter(o => o.parentId == parentId)
         childList.forEach(o => {
-            const arr = GetOptions(o.id, menus)
+            const arr = GetOptions(o.id, dataList)
 
             if (arr) arr.forEach(x => {
                 o.children = []
-                o.children.push({ label: x.menuName, value: x.id })
+                o.children.push({ label: x.nodeName, value: x.id })
             })
         })
         return childList
     } else {
 
-        const rootList = menus.filter(o => o.parentId == undefined || o.parentId == "")
+        const rootList = dataList.filter(o => o.parentId == undefined || o.parentId == "")
         let resultList = []
         rootList.forEach(o => {
 
-            const root = { label: o.menuName, value: o.id, children: [] }
+            const root = { label: o.nodeName, value: o.id, children: [] }
 
-            const childList = GetOptions(o.id, menus)
+            const childList = GetOptions(o.id, dataList)
 
             if (childList) childList.forEach(x => {
-                root.children.push({ label: x.menuName, value: x.id })
+                root.children.push({ label: x.nodeName, value: x.id })
             })
 
             resultList.push(root)

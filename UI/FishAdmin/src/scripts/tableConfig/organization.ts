@@ -1,7 +1,10 @@
 const columns = [
     { prop: "id", hidden: true, label: "ID", editable: false, index: 1, queryable: false, formField: "input", defaultValue: "" },
-    { prop: "nodeName", hidden: false, label: "节点名字", editable: true, sortable: true, index: 2, queryable: true, formField: "input", defaultValue: "" },
-    { prop: "nodeType", hidden: false, label: "节点类型", editable: true, sortable: true, index: 3, queryable: true, formField: "input", defaultValue: "" },
+    
+    { prop: "parentId", dataType: "string", hidden: true, label: "上级组织", editable: true, sortable: true, index: 23, queryable: true, formField: "OrganizationNodeSelector", defaultValue: "" },
+
+    { prop: "nodeName", hidden: false, label: "组织名字", editable: true, sortable: true, index: 2, queryable: true, formField: "input", defaultValue: "" },
+    { prop: "nodeType", hidden: false, label: "组织类型", editable: true, sortable: true, index: 3, queryable: true, formField: "input", defaultValue: "" },
     { prop: "description", hidden: false, label: "详细", editable: true, sortable: true, index: 3, queryable: true, formField: "input", defaultValue: "" },
     { prop: "status", hidden: false, label: "状态", editable: true, sortable: true, index: 3, queryable: true, formField: "input", defaultValue: "" },
 
@@ -9,8 +12,8 @@ const columns = [
 
 const formRoles = {
 
-    nodeName: [{ required: true, message: "节点名必填", trigger: 'blur' }],
-    nodeType: [{ required: true, message: "节点类型必填", trigger: 'blur' }],
+    nodeName: [{ required: true, message: "组织名必填", trigger: 'blur' }],
+    nodeType: [{ required: true, message: "组织类型必填", trigger: 'blur' }],
     status: [{ required: true, message: "状态必填", trigger: 'blur' }],
 
 }

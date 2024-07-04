@@ -20,6 +20,12 @@
               <MenuNodeSelector v-model="item.value" />
             </el-form-item>
 
+            <el-form-item v-else-if="item.formField == 'OrganizationNodeSelector'" :label="item.label"
+              :prop="item.prop">
+              <OrganizationNodeSelector v-model="item.value"></OrganizationNodeSelector>
+            </el-form-item>
+
+
             <el-form-item v-else :label="item.label" :prop="item.prop">
               <el-input v-model="item.value" />
             </el-form-item>

@@ -31,7 +31,7 @@ router.beforeEach(async (to, from) => {
         })
 
         //生成后重定向到index
-        return { path: "/" }
+        return { path: to.path }
     }
 
     //不在白名单需要处理
