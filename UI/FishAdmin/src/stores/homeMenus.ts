@@ -14,6 +14,8 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
 
     const menuList = userInfoStore.getHomeMenu()
 
+    const isCollapse = ref(false)
+
     const defaultActive = ref("")
 
     const homeTabsStore = useHomeTabsStore()
@@ -38,7 +40,7 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
 
     }
 
-    return { menuList, defaultActive, clickMenuItem, clear }
+    return { menuList, defaultActive, clickMenuItem, isCollapse, clear }
 }, {
     //持久化
     persist: {

@@ -117,15 +117,14 @@ const closeAllTabs = () => {
 }
 
 
-.demo-tabs>.el-tabs__content {
+/* .demo-tabs>.el-tabs__content {
   height: calc(100% - 50px);
   overflow: hidden;
   padding: 0;
-}
+} */
 
 .el-tabs__item {
   user-select: none;
-
 }
 
 .demo-tabs .custom-tabs-label .el-icon {

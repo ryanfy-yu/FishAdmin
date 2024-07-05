@@ -16,8 +16,6 @@
         <template v-for="item in tableConfig.columns">
 
           <template v-if="!item.hidden">
-            <!-- <el-table-column v-if="item.formField == 'select'" :formatter="columnFormat" :prop="item.prop"
-              :label="item.label" sortable="custom" /> -->
             <el-table-column :prop="item.prop" :label="item.label" sortable="custom" />
           </template>
         </template>
@@ -65,22 +63,9 @@ import { tableConfig } from "@/scripts/tableConfig/systemUser"
 
 import httpRequest from '@/scripts/httpRequest'
 import { ElMessageBox, ElMessage } from 'element-plus'
-// import { useSelectionStore } from '@/stores/selection'
 
 //数据对象
 const tableData = ref([])
-
-//选项源
-// const selection = useSelectionStore()
-// const columnFormat = (row: any, column: any, cellValue: any, index: number) => {
-//   const columnConfig = tableConfig.columns.find(o => o.prop == column.property)
-//   if (columnConfig) {
-//     const text = selection.GetSelectionText(columnConfig.selectOrigin, cellValue)
-
-//     if (text) return text
-//   }
-//   return cellValue
-// }
 
 //组件实例
 const childDetail = ref()
@@ -122,11 +107,7 @@ const deleteItem = (row: any) => {
             type: 'success',
             grouping: true,
           })
-
-
           GetData()
-
-
         } else {
           ElMessage({
             message: "保删除失败！原因：" + response.data.error,
@@ -135,7 +116,6 @@ const deleteItem = (row: any) => {
           })
         }
       })
-
     })
 }
 
@@ -201,7 +181,6 @@ const GetData = () => {
 
 onMounted(() => {
   childSearch.value.dataLoad(tableConfig)
-  // selection.init()
   GetData()
 })
 

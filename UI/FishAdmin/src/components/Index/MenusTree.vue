@@ -1,26 +1,28 @@
 <template>
 
-    <div v-for="item in menusProps.menuTree" :key="item.index">
+    <template v-for="item in menusProps.menuTree" :key="item.index">
         <el-sub-menu v-if="item.children != undefined && item.children.length > 0" :index="item.index">
+
             <template #title>
                 <el-icon>
                     <component :is="item.icon" />
                 </el-icon>
-                {{ item.title }}
+                <span> {{ item.title }}</span>
             </template>
             <MenusTree :menuTree="item.children" />
         </el-sub-menu>
 
         <el-menu-item v-else :index="item.index" @click="clickItem(item)">
+            <el-icon>
+                <component :is="item.icon" />
+            </el-icon>
             <template #title>
-                <el-icon>
-                    <component :is="item.icon" />
-                </el-icon>
-                {{ item.title }}
+
+                <span></span> {{ item.title }}
             </template>
         </el-menu-item>
 
-    </div>
+    </template>
 </template>
 
 <script setup lang="ts">

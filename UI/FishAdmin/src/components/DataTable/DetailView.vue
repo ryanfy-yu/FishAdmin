@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="isShow" size="50%" :show-close="false" title="原始数据">
+  <el-drawer v-model="isShow" size="50%" :show-close="false" direction="ltr" title="原始数据">
     <el-descriptions :column="1" border>
 
       <template v-for="item in detail">

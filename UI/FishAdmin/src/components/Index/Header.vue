@@ -5,7 +5,10 @@
   <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false"
     @select="handleSelect">
     <el-menu-item>
-      <img style="width: 100px" src="https://element-plus.org/images/element-plus-logo.svg" alt="Element logo" />
+      <!-- <img style="width: 100px" src="https://element-plus.org/images/element-plus-logo.svg" alt="Element logo" /> -->
+
+      <el-icon @click="collapseClick"><Fold /></el-icon>
+      <!-- <el-icon><Fold /></el-icon> -->
     </el-menu-item>
     <div class="flex-grow">
 
@@ -53,14 +56,19 @@ import { ref } from 'vue'
 import { useDark } from "@vueuse/core"
 import { useUserInfoStore } from '@/stores/userInfo';
 import { useHomeMenusStore } from '@/stores/homeMenus';
-import { useHomeTabsStore } from '@/stores/homeTabs';
 import { useRouter } from 'vue-router';
-
+import { Fold  } from '@element-plus/icons-vue'
 const logoutDialogVisible = ref(false)
 const userInfoStore = useUserInfoStore()
 const homeMenusStore = useHomeMenusStore()
-const hometabsStore = useHomeTabsStore()
 const router = useRouter()
+
+
+const collapseClick=()=>{
+
+  homeMenusStore.isCollapse = !homeMenusStore.isCollapse
+
+}
 
 const logout = () => {
   userInfoStore.clear()
