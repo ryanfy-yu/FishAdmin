@@ -10,8 +10,22 @@ const router = createRouter({
       component: () => import("@/views/LoginView.vue")
     },
     {
-      name: "error",
-      path: '/:catchAll(.*)',
+      path: "/index",
+      redirect: "/"
+    },
+    // {
+    //   name: "error",
+    //   path: '/:catchAll(.*)',
+    //   component: () => import('@/views/Error.vue')
+    // }
+    {
+      path: '/*',
+      name: '404',
+      component: () => import('@/views/Error.vue')
+    },
+    {
+      path: '/500',
+      name: '500',
       component: () => import('@/views/Error.vue')
     }
     // {

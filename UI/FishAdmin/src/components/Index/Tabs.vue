@@ -4,21 +4,9 @@
       <el-tabs @tab-remove="homeTabsStore.removeTab" @tab-change="tabChange" type="border-card" class="demo-tabs"
         v-model="homeTabsStore.activeTab">
 
-        <!-- 首页配置 -->
-        <!-- <el-tab-pane>
-          <template #label label="title" name="0">
-            <span class="custom-tabs-label">
-              <el-icon>
-                <HomeFilled />
-              </el-icon>
-              <span>首页</span>
-            </span>
-          </template>
-</el-tab-pane> -->
-
         <!-- 菜单页配置 -->
         <template v-for="item in homeTabsStore.tabsData">
-          <el-tab-pane closable :label="item.title" :name="item.name">
+          <el-tab-pane :closable="item.closable" :label="item.title" :name="item.name">
             <template #label v-if="item.icon != ''">
               <span class="custom-tabs-label">
                 <el-icon>
@@ -31,9 +19,9 @@
         </template>
         <el-scrollbar>
           <router-view v-slot="{ Component }">
-            <!-- <keep-alive> -->
+            <keep-alive>
               <component :is="Component" />
-            <!-- </keep-alive> -->
+            </keep-alive>
           </router-view>
         </el-scrollbar>
       </el-tabs>
@@ -54,7 +42,6 @@
 </template>
 
 <script lang="ts" setup>
-// import DataTable from '@/components/DataTable/DataTable.vue';
 import { ref } from 'vue'
 import { useHomeTabsStore } from "@/stores/homeTabs"
 import { useHomeMenusStore } from "@/stores/homeMenus"
@@ -63,7 +50,6 @@ import { useRouter } from 'vue-router'
 const homeTabsStore = useHomeTabsStore()
 const homeMenusStore = useHomeMenusStore()
 const router = useRouter()
-
 
 const isfullScreenMode = ref(false);
 const useFullScreen = () => {
@@ -80,8 +66,6 @@ const tabChange = (name: number) => {
   } else {
     router.push("/home")
     homeMenusStore.defaultActive = "0"
-
-
   }
 }
 
@@ -90,9 +74,7 @@ const closeAllTabs = () => {
   homeTabsStore.activeTab = "0"
   router.push("home")
   var tabs = homeTabsStore.tabsData
-
   homeTabsStore.tabsData = tabs.filter((tab) => tab.name == homeTabsStore.activeTab)
-
 }
 
 
@@ -117,11 +99,11 @@ const closeAllTabs = () => {
 }
 
 
-/* .demo-tabs>.el-tabs__content {
+.demo-tabs>.el-tabs__content {
   height: calc(100% - 50px);
   overflow: hidden;
   padding: 0;
-} */
+}
 
 .el-tabs__item {
   user-select: none;

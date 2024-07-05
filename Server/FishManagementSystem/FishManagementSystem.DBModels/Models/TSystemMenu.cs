@@ -14,6 +14,10 @@ namespace FishManagementSystem.DBModels.Models
         /// </summary>
         public string? ParentId { get; set; }
 
+        public int? Index { get; set; }
+
+        public bool Closable { get; set; }
+
         public string MenuName { get; set; }
 
         public string MenuCode { get; set; }

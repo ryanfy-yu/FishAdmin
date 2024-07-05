@@ -14,8 +14,8 @@
                         <MenuNodeSelector v-model="formData[key]"></MenuNodeSelector>
                     </el-form-item>
 
-                    <el-form-item v-else-if="GetAttr(key).formField == 'OrganizationNodeSelector'" :label="GetAttr(key).label"
-                        :prop="GetAttr(key).prop">
+                    <el-form-item v-else-if="GetAttr(key).formField == 'OrganizationNodeSelector'"
+                        :label="GetAttr(key).label" :prop="GetAttr(key).prop">
                         <OrganizationNodeSelector v-model="formData[key]"></OrganizationNodeSelector>
                     </el-form-item>
 
@@ -53,7 +53,7 @@ import MenuNodeSelector from "@/components/System/MenuNodeSelector.vue";
 import OrganizationNodeSelector from "@/components/System/OrganizationNodeSelector.vue";
 import MenuTypeRadio from "@/components/System/MenuTypeRadio.vue";
 
-
+const refForm = ref<FormInstance>();
 const formData = ref({});
 const isShow = ref(false);
 
@@ -65,6 +65,10 @@ const GetAttr = (keyName: string) => {
 };
 
 const dataLoad = function (rowData: any, tableConfig: any) {
+
+
+
+
     _rowData = rowData;
 
     _tableConfig = tableConfig;
@@ -93,6 +97,10 @@ const dataLoad = function (rowData: any, tableConfig: any) {
     });
 
     formData.value = obj
+
+    if (refForm.value != "") {
+        refForm.value.resetFields() //重置表单
+    }
 };
 
 const handleClose = (done: Function) => {
@@ -121,7 +129,7 @@ const saveData = () => {
     });
 };
 
-const refForm = ref<FormInstance>();
+
 const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     await formEl.validate((valid, fields) => {

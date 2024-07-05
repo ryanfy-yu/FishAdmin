@@ -21,9 +21,9 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
                 // 处理成功情况
                 if (response.data.isSuccess) {
 
-                   const temp  = response.data.data.menus
+                    const temp = response.data.data.menus
 
-                     userMenuList.value=temp.sort(o=>o.sort)
+                    userMenuList.value = temp.sort(o => o.sort)
 
                 }
             })
@@ -33,19 +33,20 @@ export const useUserInfoStore = defineStore('SystemUserInfo', () => {
 
         let menuList: Array<any> = []
 
-        userMenuList.value.forEach((o, index) => {
+        userMenuList.value.forEach(o => {
             menuList.push({
-                index: index,
+                index: o.index,
                 title: o.menuName,
                 icon: o.icon,
                 path: o.url,
                 parentId: o.parentId,
-                id: o.id
+                id: o.id,
+                closable: o.closable
             })
         })
 
 
-        return GetRecursionMenuList("", menuList)
+        return GetRecursionMenuList("", menuList).sort((a, b) => a.index - b.index)
     }
 
     const modules = import.meta.glob('../views/**/**.vue')  // 导入

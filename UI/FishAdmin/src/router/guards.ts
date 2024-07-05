@@ -11,9 +11,9 @@ router.beforeEach(async (to, from) => {
     const routeList = userInfoStore.getRouterList()
 
 
-    if (!userInfoStore.isLoggedin && to.name != "login") {
+    if (!userInfoStore.isLoggedin && to.path != "/login") {
 
-        return { name: 'login' }
+        return { path: '/login' }
     }
 
 
@@ -39,13 +39,13 @@ router.beforeEach(async (to, from) => {
 
         //无路由数据
         if (routeList.length < 1) {
-            return { name: 'login' }
+            return { path: '/login' }
         }
 
     }
 
     if (to.path == "/login" && userInfoStore.isLoggedin) {
-        return { name: 'index' }
+        return { path: '/index' }
     }
 
 

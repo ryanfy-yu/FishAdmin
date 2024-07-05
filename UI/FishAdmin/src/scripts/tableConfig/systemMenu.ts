@@ -1,12 +1,18 @@
 const columns = [
 
     { prop: "id", dataType: "string", hidden: true, label: "ID", editable: false, index: 0, queryable: false, formField: "input", defaultValue: "" },
-   
+
     { prop: "parentId", dataType: "string", hidden: true, label: "上级菜单", editable: true, sortable: true, index: 23, queryable: true, formField: "MenuNodeSelector", defaultValue: "" },
+
+
+
     { prop: "menuName", dataType: "string", hidden: false, label: "菜单名称", editable: true, sortable: true, index: 20, queryable: true, formField: "input", defaultValue: "" },
     { prop: "menuCode", dataType: "string", hidden: false, label: "菜单编码", editable: true, sortable: true, index: 25, queryable: true, formField: "input", defaultValue: "" },
 
     { prop: "menuType", dataType: "string", hidden: false, label: "菜单类型", editable: true, sortable: true, index: 40, queryable: true, formField: "MenuTypeRadio", defaultValue: "" },
+
+    { prop: "index", dataType: "number", hidden: false, label: "菜单索引", editable: true, sortable: true, index: 23, queryable: true, formField: "number", defaultValue: "" },
+    { prop: "closable", dataType: "string", hidden: false, label: "可关闭", editable: true, sortable: true, index: 23, queryable: true, formField: "switch", defaultValue: "true" },
     { prop: "icon", dataType: "string", hidden: false, label: "图标", editable: true, sortable: true, index: 50, queryable: false, formField: "input", defaultValue: "Document" },
     { prop: "viewUrl", dataType: "string", hidden: false, label: "视图路径", editable: true, sortable: true, index: 60, queryable: true, formField: "input", defaultValue: "" },
 
@@ -23,7 +29,8 @@ const formRoles = {
     menuCode: [{ required: true, message: "菜单编码必填", trigger: 'blur' }],
     menuType: [{ required: true, message: "菜单类型必填", trigger: 'blur' }],
     sort: [{ required: true, message: "排序必填", trigger: 'blur' }],
-
+    index: [{ required: true, message: "索引必填", trigger: 'blur' }],
+    closable: [{ required: true, message: "可关闭必选", trigger: 'blur' }],
 }
 
 const tableConfig = {

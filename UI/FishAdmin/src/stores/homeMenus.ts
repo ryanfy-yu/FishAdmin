@@ -29,12 +29,11 @@ export const useHomeMenusStore = defineStore('homeMenus', () => {
             title: menuItem.title,
             icon: menuItem.icon,
             path: menuItem.path,
+            closable: menuItem.closable
         })
     }
 
     const clear = function () {
-
-        //menuList.values = []
         defaultActive.value = ""
         sessionStorage.removeItem("homeMenus")
 

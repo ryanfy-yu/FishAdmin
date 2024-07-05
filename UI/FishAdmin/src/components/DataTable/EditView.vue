@@ -53,7 +53,7 @@ import httpRequest from "@/scripts/httpRequest";
 import MenuNodeSelector from "@/components/System/MenuNodeSelector.vue";
 import MenuTypeRadio from "@/components/System/MenuTypeRadio.vue";
 
-
+const refForm = ref<FormInstance>();
 const formData = ref({});
 const isShow = ref(false);
 
@@ -65,6 +65,7 @@ const GetAttr = (keyName: string) => {
 };
 
 const dataLoad = function (rowData: any, tableConfig: any) {
+
     _rowData = rowData;
 
     _tableConfig = tableConfig;
@@ -93,6 +94,10 @@ const dataLoad = function (rowData: any, tableConfig: any) {
         }
     });
     formData.value = obj
+
+    if (refForm.value != "") {
+        refForm.value.resetFields() //重置表单
+    }
 };
 
 const handleClose = (done: Function) => {
@@ -100,10 +105,6 @@ const handleClose = (done: Function) => {
 };
 
 const saveData = () => {
-
-
-
-
     httpRequest.put(_tableConfig.putUrl, formData.value).then(function (response) {
         if (response.data.isSuccess) {
             ElMessage({
@@ -124,7 +125,7 @@ const saveData = () => {
     });
 };
 
-const refForm = ref<FormInstance>();
+
 const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     await formEl.validate((valid, fields) => {

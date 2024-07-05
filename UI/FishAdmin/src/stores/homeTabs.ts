@@ -57,7 +57,7 @@ export const useHomeTabsStore = defineStore('homeTabs', () => {
                 //content: menu.content,
                 icon: menu.icon,
                 path: menu.path,
-                //isCloseable: menu.isCloseable
+                closable: menu.closable
             });
 
             router.push(menu.path)
@@ -71,7 +71,6 @@ export const useHomeTabsStore = defineStore('homeTabs', () => {
     const clear = function () {
 
         activeTab.value = "0"
-        // tabIndex.value = 0
         tabsData.value = []
         sessionStorage.removeItem("homeTabs")
 

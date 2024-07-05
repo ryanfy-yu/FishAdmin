@@ -20,7 +20,7 @@ const pagination = ref({
     total: 0,
 })
 
-const dataLoad = (total) => {
+const dataLoad = (total: number) => {
 
     pagination.value.total = total
 }
