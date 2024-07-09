@@ -84,7 +84,15 @@ const dataLoad = function (rowData: any, tableConfig: any) {
 
                     if (column.dataType == "Array") {
                         obj[key] = rowData[key] ? JSON.parse(rowData[key]) : "";
-                    } else {
+                    } else if (column.dataType == "number") {
+
+                        obj[key] = rowData[key]
+                    }
+                    else if (column.dataType == "bool") {
+
+                        obj[key] = rowData[key]
+                    }
+                    else {
                         obj[key] = rowData[key] ? rowData[key].toString() : "";
                     }
                 }
@@ -95,9 +103,9 @@ const dataLoad = function (rowData: any, tableConfig: any) {
     });
     formData.value = obj
 
-    if (refForm.value != "") {
-        refForm.value.resetFields() //重置表单
-    }
+    // if (refForm.value != "") {
+    //     refForm.value.resetFields() //重置表单
+    // }
 };
 
 const handleClose = (done: Function) => {

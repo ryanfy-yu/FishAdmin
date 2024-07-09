@@ -5,7 +5,7 @@ type TabType = {
     icon: string,
     content: string,
     path: string,
-    isCloseable?: boolean
+    closable?: boolean
 }
 
 export default TabType

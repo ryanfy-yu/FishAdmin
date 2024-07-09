@@ -10,12 +10,10 @@ const columns = [
     { prop: "menuCode", dataType: "string", hidden: false, label: "菜单编码", editable: true, sortable: true, index: 25, queryable: true, formField: "input", defaultValue: "" },
 
     { prop: "menuType", dataType: "string", hidden: false, label: "菜单类型", editable: true, sortable: true, index: 40, queryable: true, formField: "MenuTypeRadio", defaultValue: "" },
-
     { prop: "index", dataType: "number", hidden: false, label: "菜单索引", editable: true, sortable: true, index: 23, queryable: true, formField: "number", defaultValue: "" },
-    { prop: "closable", dataType: "string", hidden: false, label: "可关闭", editable: true, sortable: true, index: 23, queryable: true, formField: "switch", defaultValue: "true" },
+    { prop: "closable", dataType: "bool", hidden: false, label: "可关闭", editable: true, sortable: true, index: 23, queryable: true, formField: "switch", defaultValue: "true" },
     { prop: "icon", dataType: "string", hidden: false, label: "图标", editable: true, sortable: true, index: 50, queryable: false, formField: "input", defaultValue: "Document" },
     { prop: "viewUrl", dataType: "string", hidden: false, label: "视图路径", editable: true, sortable: true, index: 60, queryable: true, formField: "input", defaultValue: "" },
-
     { prop: "url", dataType: "string", hidden: false, label: "url路径", editable: true, sortable: true, index: 60, queryable: true, formField: "input", defaultValue: "" },
     { prop: "sort", dataType: "number", hidden: false, label: "排序", editable: true, sortable: true, index: 70, queryable: false, formField: "number", defaultValue: "100" },
     { prop: "status", dataType: "string", hidden: false, label: "状态", editable: true, sortable: true, index: 80, queryable: true, formField: "input", selectOrigin: "normal_status", defaultValue: "1" },
